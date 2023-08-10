@@ -1,0 +1,7 @@
+Read basics of AES :
+Refference:
+https://www.geeksforgeeks.org/advanced-encryption-standard-aes/
+Differenece Between AES and DES
+Refference
+https://www.geeksforgeeks.org/difference-between-aes-and-des-ciphers/
+
