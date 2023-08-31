@@ -189,7 +189,7 @@ void AddRoundKey(unsigned char *state, unsigned char *key)
 {
     for (int i = 0; i < 16; i++)
     {
-        state[i] ^= key[i];
+        state[i] =state[i]^ key[i];
     }
 }
 void AES_Encrypt(unsigned char *messages, unsigned char *key)
