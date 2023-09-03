@@ -145,13 +145,13 @@ void SubBytes(unsigned char *text_element)
 
 void Inverse_SubBytes(unsigned char *text_element)
 {
-    cout<<"Inverse Sub Bytes"<<endl;
+    cout << "Inverse Sub Bytes" << endl;
     for (int i = 0; i < 16; i++)
     {
         text_element[i] = Inverse_SBox[text_element[i]];
-        cout<<text_element[i]<<" ";
+        cout << text_element[i] << " ";
     }
-    cout<<endl;
+    cout << endl;
 }
 
 void ShiftRows(unsigned char *text_element)
@@ -182,9 +182,8 @@ void ShiftRows(unsigned char *text_element)
         text_element[i] = temporary[i];
         cout << text_element[i] << " ";
     }
-    cout<<endl;
+    cout << endl;
 }
-
 
 void Inverse_Shift_Rows(unsigned char *text_element)
 {
@@ -215,9 +214,8 @@ void Inverse_Shift_Rows(unsigned char *text_element)
         text_element[i] = temporary[i];
         cout << text_element[i] << " ";
     }
-    cout<<endl;
+    cout << endl;
 }
-
 
 void MixColumn(unsigned char *text_element)
 {
@@ -249,45 +247,45 @@ void MixColumn(unsigned char *text_element)
     }
     cout << endl;
 }
-void Inverse_Mix_Column(unsigned char* text_element)
+void Inverse_Mix_Column(unsigned char *text_element)
 {
     unsigned char temporary[16];
-    for(int i=0;i<16;i++)
+    for (int i = 0; i < 16; i++)
     {
-        if(i%4==0)
+        if (i % 4 == 0)
         {
-            temporary[i]=multiplicationTableFor14[text_element[i]]^multiplicationTableFor11[text_element[i+1]]^multiplicationTableFor13[text_element[i+2]]^multiplicationTableFor9[text_element[i+3]];
+            temporary[i] = multiplicationTableFor14[text_element[i]] ^ multiplicationTableFor11[text_element[i + 1]] ^ multiplicationTableFor13[text_element[i + 2]] ^ multiplicationTableFor9[text_element[i + 3]];
         }
-         if(i%4==1)
+        if (i % 4 == 1)
         {
-            temporary[i]=multiplicationTableFor14[text_element[i]]^multiplicationTableFor11[text_element[i+1]]^multiplicationTableFor13[text_element[i+2]]^multiplicationTableFor9[text_element[i+3]];
+            temporary[i] = multiplicationTableFor14[text_element[i]] ^ multiplicationTableFor11[text_element[i + 1]] ^ multiplicationTableFor13[text_element[i + 2]] ^ multiplicationTableFor9[text_element[i + 3]];
         }
-         if(i%4==2)
+        if (i % 4 == 2)
         {
-            temporary[i]=multiplicationTableFor14[text_element[i]]^multiplicationTableFor11[text_element[i+1]]^multiplicationTableFor13[text_element[i+2]]^multiplicationTableFor9[text_element[i+3]];
+            temporary[i] = multiplicationTableFor14[text_element[i]] ^ multiplicationTableFor11[text_element[i + 1]] ^ multiplicationTableFor13[text_element[i + 2]] ^ multiplicationTableFor9[text_element[i + 3]];
         }
-         if(i%4==3)
+        if (i % 4 == 3)
         {
-            temporary[i]=multiplicationTableFor14[text_element[i]]^multiplicationTableFor11[text_element[i+1]]^multiplicationTableFor13[text_element[i+2]]^multiplicationTableFor9[text_element[i+3]];
+            temporary[i] = multiplicationTableFor14[text_element[i]] ^ multiplicationTableFor11[text_element[i + 1]] ^ multiplicationTableFor13[text_element[i + 2]] ^ multiplicationTableFor9[text_element[i + 3]];
         }
-        cout<<"Inverse mix Column"<<endl;
-        for(int i=0;i<16;i++)
+        cout << "Inverse mix Column" << endl;
+        for (int i = 0; i < 16; i++)
         {
-            text_element[i]=temporary[i];
-            cout<<text_element[i];
+            text_element[i] = temporary[i];
+            cout << text_element[i];
         }
-        cout<<endl;
+        cout << endl;
     }
 }
-void key_Expantion(unsigned char* main_key)
+void key_Expantion(unsigned char *main_key)
 {
-    cout<<"Key Expansion"<<endl;
-    for(int i=0;i<16;i++)
+    cout << "Key Expansion" << endl;
+    for (int i = 0; i < 16; i++)
     {
-        extended_key[i]=main_key[i];
-        cout<<main_key[i];
+        extended_key[i] = main_key[i];
+        cout << main_key[i];
     }
-    cout<<endl;
+    cout << endl;
 }
 void AddRoundKey(unsigned char *text_element, unsigned char *key)
 {
@@ -296,11 +294,11 @@ void AddRoundKey(unsigned char *text_element, unsigned char *key)
         text_element[i] = text_element[i] ^ key[i];
     }
 }
-void AddRoundKeyForDecryption(unsigned char* text_element,int round)
+void AddRoundKeyForDecryption(unsigned char *text_element, int round)
 {
-    for(int i=0;i<16;i++)
+    for (int i = 0; i < 16; i++)
     {
-      //  text_element[i]=text_element[i]^extended_Key[160-round*16+i];
+        //  text_element[i]=text_element[i]^extended_Key[160-round*16+i];
     }
 }
 void AES_Encrypt(unsigned char *messages, unsigned char *key)
@@ -324,9 +322,8 @@ void AES_Encrypt(unsigned char *messages, unsigned char *key)
     ShiftRows(text_element);
     AddRoundKey(text_element, key);
 }
-void AES_Decryption(unsigned char* text,int length)
+void AES_Decryption(unsigned char *text, int length)
 {
-
 }
 int main()
 {
