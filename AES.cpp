@@ -137,9 +137,11 @@ unsigned char Inverse_SBox[256] = {0x52, 0x09, 0x6A, 0xD5, 0x30, 0x36, 0xA5, 0x3
                                    0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D};
 void SubBytes(unsigned char *text_element)
 {
+    cout<<"Subbyte  Funcion :";
     for (int i = 0; i < 16; i++)
     {
         text_element[i] = SBox[text_element[i]];
+        cout<<text_element[i];
     }
 }
 
@@ -156,30 +158,30 @@ void Inverse_SubBytes(unsigned char *text_element)
 
 void ShiftRows(unsigned char *text_element)
 {
-    unsigned char temporary[16];
-    temporary[0] = text_element[0];
-    temporary[1] = text_element[5];
-    temporary[2] = text_element[10];
-    temporary[3] = text_element[15];
+    unsigned char temporaryorary[16];
+    temporaryorary[0] = text_element[0];
+    temporaryorary[1] = text_element[5];
+    temporaryorary[2] = text_element[10];
+    temporaryorary[3] = text_element[15];
 
-    temporary[4] = text_element[4];
-    temporary[5] = text_element[9];
-    temporary[6] = text_element[14];
-    temporary[7] = text_element[3];
+    temporaryorary[4] = text_element[4];
+    temporaryorary[5] = text_element[9];
+    temporaryorary[6] = text_element[14];
+    temporaryorary[7] = text_element[3];
 
-    temporary[8] = text_element[8];
-    temporary[9] = text_element[13];
-    temporary[10] = text_element[2];
-    temporary[11] = text_element[7];
+    temporaryorary[8] = text_element[8];
+    temporaryorary[9] = text_element[13];
+    temporaryorary[10] = text_element[2];
+    temporaryorary[11] = text_element[7];
 
-    temporary[12] = text_element[12];
-    temporary[13] = text_element[1];
-    temporary[14] = text_element[6];
-    temporary[15] = text_element[11];
+    temporaryorary[12] = text_element[12];
+    temporaryorary[13] = text_element[1];
+    temporaryorary[14] = text_element[6];
+    temporaryorary[15] = text_element[11];
     cout << "After Shifting Rows" << endl;
     for (int i = 0; i < 16; i++)
     {
-        text_element[i] = temporary[i];
+        text_element[i] = temporaryorary[i];
         cout << text_element[i] << " ";
     }
     cout << endl;
@@ -187,31 +189,31 @@ void ShiftRows(unsigned char *text_element)
 
 void Inverse_Shift_Rows(unsigned char *text_element)
 {
-    unsigned char temporary[16];
-    temporary[0] = text_element[0];
-    temporary[4] = text_element[4];
-    temporary[8] = text_element[8];
-    temporary[12] = text_element[12];
+    unsigned char temporaryorary[16];
+    temporaryorary[0] = text_element[0];
+    temporaryorary[4] = text_element[4];
+    temporaryorary[8] = text_element[8];
+    temporaryorary[12] = text_element[12];
 
-    temporary[1] = text_element[13];
-    temporary[5] = text_element[1];
-    temporary[9] = text_element[5];
-    temporary[13] = text_element[9];
+    temporaryorary[1] = text_element[13];
+    temporaryorary[5] = text_element[1];
+    temporaryorary[9] = text_element[5];
+    temporaryorary[13] = text_element[9];
 
-    temporary[2] = text_element[10];
-    temporary[6] = text_element[14];
-    temporary[10] = text_element[2];
-    temporary[14] = text_element[6];
+    temporaryorary[2] = text_element[10];
+    temporaryorary[6] = text_element[14];
+    temporaryorary[10] = text_element[2];
+    temporaryorary[14] = text_element[6];
 
-    temporary[15] = text_element[3];
-    temporary[3] = text_element[7];
-    temporary[7] = text_element[11];
-    temporary[11] = text_element[15];
+    temporaryorary[15] = text_element[3];
+    temporaryorary[3] = text_element[7];
+    temporaryorary[7] = text_element[11];
+    temporaryorary[11] = text_element[15];
 
     cout << "Inverse Shift Rows Operation" << endl;
     for (int i = 0; i < 16; i++)
     {
-        text_element[i] = temporary[i];
+        text_element[i] = temporaryorary[i];
         cout << text_element[i] << " ";
     }
     cout << endl;
@@ -219,59 +221,59 @@ void Inverse_Shift_Rows(unsigned char *text_element)
 
 void MixColumn(unsigned char *text_element)
 {
-    unsigned char temp[16];
+    unsigned char temporary[16];
     for (int i = 0; i < 16; i++)
     {
         if (i % 4 == 0)
         {
-            temp[i] = multiplicationTableFor2[text_element[i]] ^ multiplicationTableFor3[text_element[i + 1]] ^ text_element[i + 2] ^ text_element[i + 3];
+            temporary[i] = multiplicationTableFor2[text_element[i]] ^ multiplicationTableFor3[text_element[i + 1]] ^ text_element[i + 2] ^ text_element[i + 3];
         }
         if (i % 4 == 1)
         {
-            temp[i] = multiplicationTableFor2[text_element[i]] ^ multiplicationTableFor3[text_element[i + 1]] ^ text_element[i + 2] ^ text_element[i - 1];
+            temporary[i] = multiplicationTableFor2[text_element[i]] ^ multiplicationTableFor3[text_element[i + 1]] ^ text_element[i + 2] ^ text_element[i - 1];
         }
         if (i % 4 == 2)
         {
-            temp[i] = multiplicationTableFor2[text_element[i]] ^ multiplicationTableFor3[text_element[i + 1]] ^ text_element[i - 1] ^ text_element[i - 2];
+            temporary[i] = multiplicationTableFor2[text_element[i]] ^ multiplicationTableFor3[text_element[i + 1]] ^ text_element[i - 1] ^ text_element[i - 2];
         }
         if (i % 4 == 3)
         {
-            temp[i] = multiplicationTableFor2[text_element[i]] ^ multiplicationTableFor3[text_element[i - 3]] ^ text_element[i - 1] ^ text_element[i - 2];
+            temporary[i] = multiplicationTableFor2[text_element[i]] ^ multiplicationTableFor3[text_element[i - 3]] ^ text_element[i - 1] ^ text_element[i - 2];
         }
     }
     cout << "\nMix Column" << endl;
     for (int i = 0; i < 16; i++)
     {
-        text_element[i] = temp[i];
+        text_element[i] = temporary[i];
         printf("%X ", text_element[i]);
     }
     cout << endl;
 }
 void Inverse_Mix_Column(unsigned char *text_element)
 {
-    unsigned char temporary[16];
+    unsigned char temporaryorary[16];
     for (int i = 0; i < 16; i++)
     {
         if (i % 4 == 0)
         {
-            temporary[i] = multiplicationTableFor14[text_element[i]] ^ multiplicationTableFor11[text_element[i + 1]] ^ multiplicationTableFor13[text_element[i + 2]] ^ multiplicationTableFor9[text_element[i + 3]];
+            temporaryorary[i] = multiplicationTableFor14[text_element[i]] ^ multiplicationTableFor11[text_element[i + 1]] ^ multiplicationTableFor13[text_element[i + 2]] ^ multiplicationTableFor9[text_element[i + 3]];
         }
         if (i % 4 == 1)
         {
-            temporary[i] = multiplicationTableFor14[text_element[i]] ^ multiplicationTableFor11[text_element[i + 1]] ^ multiplicationTableFor13[text_element[i + 2]] ^ multiplicationTableFor9[text_element[i + 3]];
+            temporaryorary[i] = multiplicationTableFor14[text_element[i]] ^ multiplicationTableFor11[text_element[i + 1]] ^ multiplicationTableFor13[text_element[i + 2]] ^ multiplicationTableFor9[text_element[i + 3]];
         }
         if (i % 4 == 2)
         {
-            temporary[i] = multiplicationTableFor14[text_element[i]] ^ multiplicationTableFor11[text_element[i + 1]] ^ multiplicationTableFor13[text_element[i + 2]] ^ multiplicationTableFor9[text_element[i + 3]];
+            temporaryorary[i] = multiplicationTableFor14[text_element[i]] ^ multiplicationTableFor11[text_element[i + 1]] ^ multiplicationTableFor13[text_element[i + 2]] ^ multiplicationTableFor9[text_element[i + 3]];
         }
         if (i % 4 == 3)
         {
-            temporary[i] = multiplicationTableFor14[text_element[i]] ^ multiplicationTableFor11[text_element[i + 1]] ^ multiplicationTableFor13[text_element[i + 2]] ^ multiplicationTableFor9[text_element[i + 3]];
+            temporaryorary[i] = multiplicationTableFor14[text_element[i]] ^ multiplicationTableFor11[text_element[i + 1]] ^ multiplicationTableFor13[text_element[i + 2]] ^ multiplicationTableFor9[text_element[i + 3]];
         }
         cout << "Inverse mix Column" << endl;
         for (int i = 0; i < 16; i++)
         {
-            text_element[i] = temporary[i];
+            text_element[i] = temporaryorary[i];
             cout << text_element[i];
         }
         cout << endl;
