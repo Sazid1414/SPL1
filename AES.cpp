@@ -1,6 +1,6 @@
 #include <iostream>
 using namespace std;
-int NumberOfRound=10;
+int NumberOfRound = 10;
 unsigned char ExtendedKey[176];
 unsigned char RoundConstant[] = {0x03, 0x06, 0x0c, 0x18, 0x30, 0x60, 0xc0, 0x9b, 0x2d, 0x5a};
 unsigned char SBox[256] = {0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
@@ -145,7 +145,7 @@ void SubBytesForEncryption(unsigned char *MessegeElement)
         MessegeElement[i] = SBox[MessegeElement[i]];
         cout << MessegeElement[i];
     }
-    cout<<endl;
+    cout << endl;
 }
 
 void InverseSubByteForDecryption(unsigned char *MessegeElement)
@@ -197,7 +197,7 @@ void InverseShiftRowForDecryption(unsigned char *MessegeElement)
     temporary[1] = MessegeElement[13];
     temporary[2] = MessegeElement[10];
     temporary[3] = MessegeElement[7];
-    
+
     temporary[4] = MessegeElement[4];
     temporary[5] = MessegeElement[1];
     temporary[6] = MessegeElement[14];
@@ -212,9 +212,6 @@ void InverseShiftRowForDecryption(unsigned char *MessegeElement)
     temporary[13] = MessegeElement[9];
     temporary[14] = MessegeElement[6];
     temporary[15] = MessegeElement[3];
-   
-    
-    
 
     cout << "Inverse Shift Rows Operation: " << endl;
     for (int i = 0; i < 16; i++)
@@ -251,7 +248,7 @@ void MixColumn(unsigned char *MessegeElement)
     for (int i = 0; i < 16; i++)
     {
         MessegeElement[i] = temporary[i];
-       cout<<MessegeElement[i];
+        cout << MessegeElement[i];
     }
     cout << endl;
 }
@@ -285,77 +282,76 @@ void Inverse_Mix_Column(unsigned char *MessegeElement)
         cout << endl;
     }
 }
-void WByteSubstitution(unsigned char* word)
+void WByteSubstitution(unsigned char *word)
 {
-    word[0]=SBox[word[0]];
-    word[1]=SBox[word[1]];
-    word[2]=SBox[word[2]];
-    word[3]=SBox[word[3]];
-    cout<<"WByteSubtitution: "<<endl;
-    for(int i=0;i<4;i++)
+    word[0] = SBox[word[0]];
+    word[1] = SBox[word[1]];
+    word[2] = SBox[word[2]];
+    word[3] = SBox[word[3]];
+    cout << "WByteSubtitution: " << endl;
+    for (int i = 0; i < 4; i++)
     {
-        cout<<word[i];
+        cout << word[i];
     }
-    cout<<endl;
+    cout << endl;
 }
-void LeftShift(unsigned char* word)
+void LeftShift(unsigned char *word)
 {
-    unsigned char temporary=word[0];
-    word[0]=word[1];
-    word[1]=word[2];
-    word[2]=word[3];
-    word[3]=temporary;
-
+    unsigned char temporary = word[0];
+    word[0] = word[1];
+    word[1] = word[2];
+    word[2] = word[3];
+    word[3] = temporary;
 }
 void KeyExpansionAlgorithm(unsigned char *key)
 {
-    
+
     cout << "Key Expansion" << endl;
     for (int i = 0; i < 16; i++)
     {
         ExtendedKey[i] = key[i];
-        cout <<key[i];
+        cout << key[i];
     }
     cout << endl;
-    int i=0;
-    while(i<176)
+    int i = 0;
+    while (i < 176)
     {
         unsigned char word[4];
-        for(int j=0;j<4;j++)
+        for (int j = 0; j < 4; j++)
         {
-            word[j]=ExtendedKey[i-4+j];
+            word[j] = ExtendedKey[i - 4 + j];
         }
-        if(i%16==0)
+        if (i % 16 == 0)
         {
             LeftShift(word);
             WByteSubstitution(word);
-            word[0]=word[0]^RoundConstant[((i/16)-1)];
+            word[0] = word[0] ^ RoundConstant[((i / 16) - 1)];
         }
-        for(int k=0;k<4;k++)
+        for (int k = 0; k < 4; k++)
         {
-            ExtendedKey[i+k]=word[k]^ExtendedKey[(i+k)-16];
+            ExtendedKey[i + k] = word[k] ^ ExtendedKey[(i + k) - 16];
         }
-        i+=4;
+        i += 4;
     }
 }
 void AddRoundKeyForEncryption(unsigned char *MessegeElement, unsigned char *key)
 {
-    cout<<"Add RoundKey: "<<endl;
+    cout << "Add RoundKey: " << endl;
     for (int i = 0; i < 16; i++)
     {
         MessegeElement[i] = MessegeElement[i] ^ ExtendedKey[i];
     }
-    cout<<endl;
+    cout << endl;
 }
 void AddRoundKeyForDecryption(unsigned char *MessegeElement, int round)
 {
-    cout<<"Add RoundKeyForDecryption: "<<endl;
+    cout << "Add RoundKeyForDecryption: " << endl;
     for (int i = 0; i < 16; i++)
     {
-         MessegeElement[i]=MessegeElement[i]^ExtendedKey[160-round*16+i];
-         cout<<MessegeElement[i];
+        MessegeElement[i] = MessegeElement[i] ^ ExtendedKey[160 - round * 16 + i];
+        cout << MessegeElement[i];
     }
-    cout<<endl;
+    cout << endl;
 }
 void AESEncryption(unsigned char *messages, unsigned char *key)
 {
@@ -366,7 +362,7 @@ void AESEncryption(unsigned char *messages, unsigned char *key)
     }
     KeyExpansionAlgorithm(MessegeElement);
     AddRoundKeyForEncryption(MessegeElement, key);
-    for (int i = 1; i <NumberOfRound ; i++)
+    for (int i = 1; i < NumberOfRound; i++)
     {
         SubBytesForEncryption(MessegeElement);
         ShiftRowsFoREncryption(MessegeElement);
@@ -377,41 +373,41 @@ void AESEncryption(unsigned char *messages, unsigned char *key)
     ShiftRowsFoREncryption(MessegeElement);
     AddRoundKeyForEncryption(MessegeElement, key);
 }
-void CipherText(unsigned char* EncryptedText,int lengthOfEncryptedMessage)
+void CipherText(unsigned char *EncryptedText, int lengthOfEncryptedMessage)
 {
-    for(int i=0;i<lengthOfEncryptedMessage;i++)
+    for (int i = 0; i < lengthOfEncryptedMessage; i++)
     {
-        cout<<EncryptedText[i];
+        cout << EncryptedText[i];
     }
-    cout<<endl;
+    cout << endl;
 }
-void AESDecryption(unsigned char *CipherText,int lengthOfMessage)
+void AESDecryption(unsigned char *CipherText, int lengthOfMessage)
 {
-    AddRoundKeyForDecryption(CipherText,0);
-    for(int i=1;i<NumberOfRound;i++)
+    AddRoundKeyForDecryption(CipherText, 0);
+    for (int i = 1; i < NumberOfRound; i++)
     {
         InverseShiftRowForDecryption(CipherText);
         InverseSubByteForDecryption(CipherText);
-        AddRoundKeyForDecryption(CipherText,i);
+        AddRoundKeyForDecryption(CipherText, i);
     }
     Inverse_Mix_Column(CipherText);
 }
-void DecryptedText(unsigned char* messages,int lengthOfMessage)
+void DecryptedText(unsigned char *messages, int lengthOfMessage)
 {
-    for(int i=0;i<lengthOfMessage;i++)
+    for (int i = 0; i < lengthOfMessage; i++)
     {
-        cout<<messages[i];
-        if(messages[i+1]=='0')
+        cout << messages[i];
+        if (messages[i + 1] == '0')
         {
-            messages[i+1]='\0';
+            messages[i + 1] = '\0';
             break;
         }
     }
 }
-int GetSizeOFString(unsigned char* message)
+int GetSizeOFString(unsigned char *message)
 {
-    int size=0;
-    while(message[size]!='\0')
+    int size = 0;
+    while (message[size] != '\0')
     {
         size++;
     }
@@ -420,80 +416,79 @@ int GetSizeOFString(unsigned char* message)
 }
 int main()
 {
-    freopen("input.txt","r",stdin);
-    freopen("output.txt","w",stdout);
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
     unsigned char message[] = "I am Sazid";
-    int LengthOfMessage=GetSizeOFString(message),LengthOfExtendedMessage;
+    int LengthOfMessage = GetSizeOFString(message), LengthOfExtendedMessage;
     unsigned char key[16] =
         {
-          2, 7, 15, 16,
-          28,12, 2, 6,
-          10, 7, 15,88,
-          9, 48, 12, 14
-        };
-    cout<<"Text to Encrypt : "<<endl;
-    for(int i=0;i<GetSizeOFString(message);i++)
+            2, 7, 15, 16,
+            28, 12, 2, 6,
+            10, 7, 15, 88,
+            9, 48, 12, 14};
+    cout << "Text to Encrypt : " << endl;
+    for (int i = 0; i < GetSizeOFString(message); i++)
     {
-        cout<<message[i];
+        cout << message[i];
     }
-    cout<<endl;
+    cout << endl;
     KeyExpansionAlgorithm(message);
-    if(LengthOfMessage%16!=0)
+    if (LengthOfMessage % 16 != 0)
     {
-        LengthOfExtendedMessage=LengthOfMessage+(16-(LengthOfMessage%16));
+        LengthOfExtendedMessage = LengthOfMessage + (16 - (LengthOfMessage % 16));
     }
-    else 
+    else
     {
-        LengthOfExtendedMessage=LengthOfMessage;
+        LengthOfExtendedMessage = LengthOfMessage;
     }
-    unsigned char EncryptedMessage[LengthOfExtendedMessage+1];
-    for(int i=0;i<LengthOfExtendedMessage;i++)
+    unsigned char EncryptedMessage[LengthOfExtendedMessage + 1];
+    for (int i = 0; i < LengthOfExtendedMessage; i++)
     {
-        if(i>LengthOfMessage)
+        if (i > LengthOfMessage)
         {
-            EncryptedMessage[i]='0';
+            EncryptedMessage[i] = '0';
         }
-        else 
+        else
         {
-            EncryptedMessage[i]=message[i];
-        }
-    }
-    EncryptedMessage[LengthOfExtendedMessage]='\0';
-    for (int i=0;i<LengthOfExtendedMessage;i+=16)
-    {
-        unsigned char temporary[16];
-        for(int j=0;j<16;j++)
-        {
-            temporary[j]=EncryptedMessage[i+j];
-        }
-        AESEncryption(temporary,key);
-        for(int k=0;k<16;k++)
-        {
-            EncryptedMessage[i+k]=temporary[k];
+            EncryptedMessage[i] = message[i];
         }
     }
-    cout<<"Cipher Text :"<<endl;
-    CipherText(EncryptedMessage,GetSizeOFString(EncryptedMessage));
-    unsigned char DecryptedMessage[LengthOfExtendedMessage+1];
-    for(int i=0;i<LengthOfMessage;i+=16)
+    EncryptedMessage[LengthOfExtendedMessage] = '\0';
+    for (int i = 0; i < LengthOfExtendedMessage; i += 16)
     {
         unsigned char temporary[16];
-        for(int j=0;j<16;j++)
+        for (int j = 0; j < 16; j++)
         {
-            temporary[j]=EncryptedMessage[i+j];
+            temporary[j] = EncryptedMessage[i + j];
         }
-        AESDecryption(temporary,sizeof(temporary));
-        for(int k=0;k<16;k++)
+        AESEncryption(temporary, key);
+        for (int k = 0; k < 16; k++)
         {
-            DecryptedMessage[i+k]=temporary[k];
-        }
-        if(i+16==LengthOfExtendedMessage)
-        {
-            DecryptedMessage[i+16]='\0';
+            EncryptedMessage[i + k] = temporary[k];
         }
     }
-    cout<<"Decrypted Message: "<<endl;
-    int SizeOfDecryptedMessage=GetSizeOFString(DecryptedMessage);
-    DecryptedText(DecryptedMessage,SizeOfDecryptedMessage);
+    cout << "Cipher Text :" << endl;
+    CipherText(EncryptedMessage, GetSizeOFString(EncryptedMessage));
+    unsigned char DecryptedMessage[LengthOfExtendedMessage + 1];
+    for (int i = 0; i < LengthOfMessage; i += 16)
+    {
+        unsigned char temporary[16];
+        for (int j = 0; j < 16; j++)
+        {
+            temporary[j] = EncryptedMessage[i + j];
+        }
+        AESDecryption(temporary, sizeof(temporary));
+        for (int k = 0; k < 16; k++)
+        {
+            DecryptedMessage[i + k] = temporary[k];
+        }
+        if (i + 16 == LengthOfExtendedMessage)
+        {
+            DecryptedMessage[i + 16] = '\0';
+        }
+    }
+    cout << "Decrypted Message: " << endl;
+    int SizeOfDecryptedMessage = GetSizeOFString(DecryptedMessage);
+    DecryptedText(DecryptedMessage, SizeOfDecryptedMessage);
     return 0;
 }
