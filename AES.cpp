@@ -299,6 +299,15 @@ void WByteSubstitution(unsigned char* word)
     }
     cout<<endl;
 }
+void LeftShift(unsigned char* word)
+{
+    unsigned char temporary=word[0];
+    word[0]=word[1];
+    word[1]=word[2];
+    word[2]=word[3];
+    word[3]=temporary;
+
+}
 void KeyExpansionAlgorithm(unsigned char *key)
 {
     
@@ -349,15 +358,6 @@ void AddRoundKeyForDecryption(unsigned char *MessegeElement, int round)
     }
     cout<<endl;
 }
-void LeftShift(unsigned char* word)
-{
-    unsigned char temporary=word[0];
-    word[0]=word[1];
-    word[1]=word[2];
-    word[2]=word[3];
-    word[3]=temporary;
-
-}
 void AESEncryption(unsigned char *messages, unsigned char *key)
 {
     unsigned char MessegeElement[16];
@@ -365,7 +365,7 @@ void AESEncryption(unsigned char *messages, unsigned char *key)
     {
         MessegeElement[i] = messages[i];
     }
- KeyExpansionAlgorithm(MessegeElement);
+    KeyExpansionAlgorithm(MessegeElement);
     AddRoundKeyForEncryption(MessegeElement, key);
     for (int i = 1; i <NumberOfRound ; i++)
     {
@@ -378,16 +378,53 @@ void AESEncryption(unsigned char *messages, unsigned char *key)
     ShiftRowsFoREncryption(MessegeElement);
     AddRoundKeyForEncryption(MessegeElement, key);
 }
-void AESDecryption(unsigned char *messages)
+void CipherText(unsigned char* EncryptedText,int lengthOfEncryptedMessage)
 {
-
+    for(int i=0;i<lengthOfEncryptedMessage;i++)
+    {
+        cout<<EncryptedText[i];
+    }
+    cout<<endl;
+}
+void AESDecryption(unsigned char *CipherText,int lengthOfMessage)
+{
+    AddRoundKeyForDecryption(CipherText,0);
+    for(int i=1;i<NumberOfRound;i++)
+    {
+        InverseShiftRowForDecryption(CipherText);
+        InverseSubByteForDecryption(CipherText);
+        AddRoundKeyForDecryption(CipherText,i);
+    }
+    Inverse_Mix_Column(CipherText);
+}
+void DecryptedText(unsigned char* messages,int lengthOfMessage)
+{
+    for(int i=0;i<lengthOfMessage;i++)
+    {
+        cout<<messages[i];
+        if(messages[i+1]=='0')
+        {
+            messages[i+1]='\0';
+            break;
+        }
+    }
+}
+int GetSizeOFString(unsigned char* message)
+{
+    int size=0;
+    while(message[size]!='\0')
+    {
+        size++;
+    }
+    size++;
+    return size;
 }
 int main()
 {
     freopen("input.txt","r",stdin);
     freopen("output.txt","w",stdout);
     unsigned char message[] = "I am Sazid";
-    int LengthOfMessage=sizeof(message),LengthOfExtendedMessage;
+    int LengthOfMessage=GetSizeOFString(message),LengthOfExtendedMessage;
     unsigned char key[16] =
         {
           2, 7, 15, 16,
@@ -396,7 +433,7 @@ int main()
           9, 48, 12, 14
         };
     cout<<"Text to Encrypt : "<<endl;
-    for(int i=0;i<sizeof(message);i++)
+    for(int i=0;i<GetSizeOFString(message);i++)
     {
         cout<<message[i];
     }
@@ -423,10 +460,41 @@ int main()
         }
     }
     EncryptedMessage[LengthOfExtendedMessage]='\0';
-    for (int i=0;i<LengthOfExtendedMessage;i++)
+    for (int i=0;i<LengthOfExtendedMessage;i+=16)
     {
-        
+        unsigned char temporary[16];
+        for(int j=0;j<16;j++)
+        {
+            temporary[j]=EncryptedMessage[i+j];
+        }
+        AESEncryption(temporary,key);
+        for(int k=0;k<16;k++)
+        {
+            EncryptedMessage[i+k]=temporary[k];
+        }
     }
-    AESEncryption(message, key);
+    cout<<"Cipher Text :"<<endl;
+    CipherText(EncryptedMessage,GetSizeOFString(EncryptedMessage));
+    unsigned char DecryptedMessage[LengthOfExtendedMessage+1];
+    for(int i=0;i<LengthOfMessage;i+=16)
+    {
+        unsigned char temporary[16];
+        for(int j=0;j<16;j++)
+        {
+            temporary[j]=EncryptedMessage[i+j];
+        }
+        AESDecryption(temporary,sizeof(temporary));
+        for(int k=0;k<16;k++)
+        {
+            DecryptedMessage[i+k]=temporary[k];
+        }
+        if(i+16==LengthOfExtendedMessage)
+        {
+            DecryptedMessage[i+16]='\0';
+        }
+    }
+    cout<<"Decrypted Message: "<<endl;
+    int SizeOfDecryptedMessage=GetSizeOFString(DecryptedMessage);
+    DecryptedText(DecryptedMessage,SizeOfDecryptedMessage);
     return 0;
 }
