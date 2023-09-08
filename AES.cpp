@@ -1,6 +1,9 @@
 #include <iostream>
 using namespace std;
-unsigned char extended_key[176];
+int NumberOfRound=10;
+unsigned char ExtendedKey[176];
+unsigned char RoundConstant[] = {0x03, 0x06, 0x0c, 0x18, 0x30, 0x60, 0xc0, 0x9b, 0x2d, 0x5a};
+
 unsigned char SBox[256] = {0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
                            0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0,
                            0xB7, 0xFD, 0x93, 0x26, 0x36, 0x3F, 0xF7, 0xCC, 0x34, 0xA5, 0xE5, 0xF1, 0x71, 0xD8, 0x31, 0x15,
@@ -135,7 +138,7 @@ unsigned char Inverse_SBox[256] = {0x52, 0x09, 0x6A, 0xD5, 0x30, 0x36, 0xA5, 0x3
                                    0x60, 0x51, 0x7F, 0xA9, 0x19, 0xB5, 0x4A, 0x0D, 0x2D, 0xE5, 0x7A, 0x9F, 0x93, 0xC9, 0x9C, 0xEF,
                                    0xA0, 0xE0, 0x3B, 0x4D, 0xAE, 0x2A, 0xF5, 0xB0, 0xC8, 0xEB, 0xBB, 0x3C, 0x83, 0x53, 0x99, 0x61,
                                    0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D};
-void SubBytes(unsigned char *MessegeElement)
+void SubBytesForEncryption(unsigned char *MessegeElement)
 {
     cout << "Subbyte  Funcion :";
     for (int i = 0; i < 16; i++)
@@ -146,199 +149,284 @@ void SubBytes(unsigned char *MessegeElement)
     cout<<endl;
 }
 
-void Inverse_SubBytes(unsigned char *MessegeElement)
+void InverseSubByteForDecryption(unsigned char *MessegeElement)
 {
     cout << "Inverse Sub Bytes" << endl;
     for (int i = 0; i < 16; i++)
     {
         MessegeElement[i] = Inverse_SBox[MessegeElement[i]];
-        cout << MessegeElement[i] << " ";
+        cout << MessegeElement[i];
     }
     cout << endl;
 }
 
-void ShiftRows(unsigned char *MessegeElement)
+void ShiftRowsFoREncryption(unsigned char *MessegeElement)
 {
-    unsigned char temporaryorary[16];
-    temporaryorary[0] = MessegeElement[0];
-    temporaryorary[1] = MessegeElement[5];
-    temporaryorary[2] = MessegeElement[10];
-    temporaryorary[3] = MessegeElement[15];
+    unsigned char temporary[16];
+    temporary[0] = MessegeElement[0];
+    temporary[1] = MessegeElement[5];
+    temporary[2] = MessegeElement[10];
+    temporary[3] = MessegeElement[15];
 
-    temporaryorary[4] = MessegeElement[4];
-    temporaryorary[5] = MessegeElement[9];
-    temporaryorary[6] = MessegeElement[14];
-    temporaryorary[7] = MessegeElement[3];
+    temporary[4] = MessegeElement[4];
+    temporary[5] = MessegeElement[9];
+    temporary[6] = MessegeElement[14];
+    temporary[7] = MessegeElement[3];
 
-    temporaryorary[8] = MessegeElement[8];
-    temporaryorary[9] = MessegeElement[13];
-    temporaryorary[10] = MessegeElement[2];
-    temporaryorary[11] = MessegeElement[7];
+    temporary[8] = MessegeElement[8];
+    temporary[9] = MessegeElement[13];
+    temporary[10] = MessegeElement[2];
+    temporary[11] = MessegeElement[7];
 
-    temporaryorary[12] = MessegeElement[12];
-    temporaryorary[13] = MessegeElement[1];
-    temporaryorary[14] = MessegeElement[6];
-    temporaryorary[15] = MessegeElement[11];
-    cout << "After Shifting Rows" << endl;
+    temporary[12] = MessegeElement[12];
+    temporary[13] = MessegeElement[1];
+    temporary[14] = MessegeElement[6];
+    temporary[15] = MessegeElement[11];
+    cout << "Shifting Row For Encryption:" << endl;
     for (int i = 0; i < 16; i++)
     {
-        MessegeElement[i] = temporaryorary[i];
-        cout << MessegeElement[i] << " ";
+        MessegeElement[i] = temporary[i];
+        cout << MessegeElement[i];
     }
     cout << endl;
 }
 
-void Inverse_Shift_Rows(unsigned char *MessegeElement)
+void InverseShiftRowForDecryption(unsigned char *MessegeElement)
 {
-    unsigned char temporaryorary[16];
-    temporaryorary[0] = MessegeElement[0];
-    temporaryorary[4] = MessegeElement[4];
-    temporaryorary[8] = MessegeElement[8];
-    temporaryorary[12] = MessegeElement[12];
+    unsigned char temporary[16];
+    temporary[0] = MessegeElement[0];
+    temporary[1] = MessegeElement[13];
+    temporary[2] = MessegeElement[10];
+    temporary[3] = MessegeElement[7];
+    
+    temporary[4] = MessegeElement[4];
+    temporary[5] = MessegeElement[1];
+    temporary[6] = MessegeElement[14];
+    temporary[7] = MessegeElement[11];
 
-    temporaryorary[1] = MessegeElement[13];
-    temporaryorary[5] = MessegeElement[1];
-    temporaryorary[9] = MessegeElement[5];
-    temporaryorary[13] = MessegeElement[9];
+    temporary[8] = MessegeElement[8];
+    temporary[9] = MessegeElement[5];
+    temporary[10] = MessegeElement[2];
+    temporary[11] = MessegeElement[15];
 
-    temporaryorary[2] = MessegeElement[10];
-    temporaryorary[6] = MessegeElement[14];
-    temporaryorary[10] = MessegeElement[2];
-    temporaryorary[14] = MessegeElement[6];
+    temporary[12] = MessegeElement[12];
+    temporary[13] = MessegeElement[9];
+    temporary[14] = MessegeElement[6];
+    temporary[15] = MessegeElement[3];
+   
+    
+    
 
-    temporaryorary[15] = MessegeElement[3];
-    temporaryorary[3] = MessegeElement[7];
-    temporaryorary[7] = MessegeElement[11];
-    temporaryorary[11] = MessegeElement[15];
-
-    cout << "Inverse Shift Rows Operation" << endl;
+    cout << "Inverse Shift Rows Operation: " << endl;
     for (int i = 0; i < 16; i++)
     {
-        MessegeElement[i] = temporaryorary[i];
-        cout << MessegeElement[i] << " ";
+        MessegeElement[i] = temporary[i];
+        cout << MessegeElement[i];
     }
     cout << endl;
 }
 
 void MixColumn(unsigned char *MessegeElement)
 {
-    unsigned char temporary[16];//This is used to store Intermediate results.
+    unsigned char temporary[16];
     for (int i = 0; i < 16; i++)
     {
-        if (i % 4 == 0)//0th column
+        if (i % 4 == 0)
         {
             temporary[i] = multiplicationTableFor2[MessegeElement[i]] ^ multiplicationTableFor3[MessegeElement[i + 1]] ^ MessegeElement[i + 2] ^ MessegeElement[i + 3];
         }
-        if (i % 4 == 1)//1st column
+        if (i % 4 == 1)
         {
             temporary[i] = multiplicationTableFor2[MessegeElement[i]] ^ multiplicationTableFor3[MessegeElement[i + 1]] ^ MessegeElement[i + 2] ^ MessegeElement[i - 1];
         }
-        if (i % 4 == 2)//2nd column
+        if (i % 4 == 2)
         {
             temporary[i] = multiplicationTableFor2[MessegeElement[i]] ^ multiplicationTableFor3[MessegeElement[i + 1]] ^ MessegeElement[i - 1] ^ MessegeElement[i - 2];
         }
-        if (i % 4 == 3)//3rd column
+        if (i % 4 == 3)
         {
             temporary[i] = multiplicationTableFor2[MessegeElement[i]] ^ multiplicationTableFor3[MessegeElement[i - 3]] ^ MessegeElement[i - 1] ^ MessegeElement[i - 2];
         }
     }
-    cout << "\nMix Column" << endl;
+    cout << "Mix Column Operation: " << endl;
     for (int i = 0; i < 16; i++)
     {
         MessegeElement[i] = temporary[i];
-       cout<<MessegeElement[i]<<" ";
+       cout<<MessegeElement[i];
     }
     cout << endl;
 }
 void Inverse_Mix_Column(unsigned char *MessegeElement)
 {
-    unsigned char temporaryorary[16];
+    unsigned char temporary[16];
     for (int i = 0; i < 16; i++)
     {
         if (i % 4 == 0)
         {
-            temporaryorary[i] = multiplicationTableFor14[MessegeElement[i]] ^ multiplicationTableFor11[MessegeElement[i + 1]] ^ multiplicationTableFor13[MessegeElement[i + 2]] ^ multiplicationTableFor9[MessegeElement[i + 3]];
+            temporary[i] = multiplicationTableFor14[MessegeElement[i]] ^ multiplicationTableFor11[MessegeElement[i + 1]] ^ multiplicationTableFor13[MessegeElement[i + 2]] ^ multiplicationTableFor9[MessegeElement[i + 3]];
         }
         if (i % 4 == 1)
         {
-            temporaryorary[i] = multiplicationTableFor14[MessegeElement[i]] ^ multiplicationTableFor11[MessegeElement[i + 1]] ^ multiplicationTableFor13[MessegeElement[i + 2]] ^ multiplicationTableFor9[MessegeElement[i + 3]];
+            temporary[i] = multiplicationTableFor14[MessegeElement[i]] ^ multiplicationTableFor11[MessegeElement[i + 1]] ^ multiplicationTableFor13[MessegeElement[i + 2]] ^ multiplicationTableFor9[MessegeElement[i + 3]];
         }
         if (i % 4 == 2)
         {
-            temporaryorary[i] = multiplicationTableFor14[MessegeElement[i]] ^ multiplicationTableFor11[MessegeElement[i + 1]] ^ multiplicationTableFor13[MessegeElement[i + 2]] ^ multiplicationTableFor9[MessegeElement[i + 3]];
+            temporary[i] = multiplicationTableFor14[MessegeElement[i]] ^ multiplicationTableFor11[MessegeElement[i + 1]] ^ multiplicationTableFor13[MessegeElement[i + 2]] ^ multiplicationTableFor9[MessegeElement[i + 3]];
         }
         if (i % 4 == 3)
         {
-            temporaryorary[i] = multiplicationTableFor14[MessegeElement[i]] ^ multiplicationTableFor11[MessegeElement[i + 1]] ^ multiplicationTableFor13[MessegeElement[i + 2]] ^ multiplicationTableFor9[MessegeElement[i + 3]];
+            temporary[i] = multiplicationTableFor14[MessegeElement[i]] ^ multiplicationTableFor11[MessegeElement[i + 1]] ^ multiplicationTableFor13[MessegeElement[i + 2]] ^ multiplicationTableFor9[MessegeElement[i + 3]];
         }
         cout << "Inverse mix Column" << endl;
         for (int i = 0; i < 16; i++)
         {
-            MessegeElement[i] = temporaryorary[i];
+            MessegeElement[i] = temporary[i];
             cout << MessegeElement[i];
         }
         cout << endl;
     }
 }
-void key_Expantion(unsigned char *main_key)
+void WByteSubstitution(unsigned char* word)
 {
+    word[0]=SBox[word[0]];
+    word[1]=SBox[word[1]];
+    word[2]=SBox[word[2]];
+    word[3]=SBox[word[3]];
+    cout<<"WByteSubtitution: "<<endl;
+    for(int i=0;i<4;i++)
+    {
+        cout<<word[i];
+    }
+    cout<<endl;
+}
+void KeyExpansionAlgorithm(unsigned char *key)
+{
+    
     cout << "Key Expansion" << endl;
     for (int i = 0; i < 16; i++)
     {
-        extended_key[i] = main_key[i];
-        cout << main_key[i];
+        ExtendedKey[i] = key[i];
+        cout <<key[i];
     }
     cout << endl;
+    int i;
+    while(i<176)
+    {
+        unsigned char word[4];
+        for(int j=0;j<4;j++)
+        {
+            word[j]=ExtendedKey[i-4+j];
+        }
+        if(i%16==0)
+        {
+            LeftShift(word);
+            WByteSubstitution(word);
+            word[0]=word[0]^RoundConstant[((i/16)-1)];
+        }
+        for(int k=0;k<4;k++)
+        {
+            ExtendedKey[i+k]=word[k]^ExtendedKey[(i+k)-16];
+        }
+        i+=4;
+    }
 }
-void AddRoundKey(unsigned char *MessegeElement, unsigned char *key)
+void AddRoundKeyForEncryption(unsigned char *MessegeElement, unsigned char *key)
 {
+    cout<<"Add RoundKey: "<<endl;
     for (int i = 0; i < 16; i++)
     {
-        MessegeElement[i] = MessegeElement[i] ^ key[i];
+        MessegeElement[i] = MessegeElement[i] ^ ExtendedKey[i];
     }
+    cout<<endl;
 }
 void AddRoundKeyForDecryption(unsigned char *MessegeElement, int round)
 {
+    cout<<"Add RoundKeyForDecryption: "<<endl;
     for (int i = 0; i < 16; i++)
     {
-        //  MessegeElement[i]=MessegeElement[i]^extended_Key[160-round*16+i];
+         MessegeElement[i]=MessegeElement[i]^ExtendedKey[160-round*16+i];
+         cout<<MessegeElement[i];
     }
+    cout<<endl;
 }
-void AES_Encrypt(unsigned char *messages, unsigned char *key)
+void LeftShift(unsigned char* word)
+{
+    unsigned char temporary=word[0];
+    word[0]=word[1];
+    word[1]=word[2];
+    word[2]=word[3];
+    word[3]=temporary;
+
+}
+void AESEncryption(unsigned char *messages, unsigned char *key)
 {
     unsigned char MessegeElement[16];
     for (int i = 0; i < 16; i++)
     {
         MessegeElement[i] = messages[i];
     }
-    int NumberOfRounds = 1;
-    key_Expantion(MessegeElement);
-    AddRoundKey(MessegeElement, key);
-    for (int i = 0; i < NumberOfRounds; i++)
+ KeyExpansionAlgorithm(MessegeElement);
+    AddRoundKeyForEncryption(MessegeElement, key);
+    for (int i = 1; i <NumberOfRound ; i++)
     {
-        SubBytes(MessegeElement);
-        ShiftRows(MessegeElement);
+        SubBytesForEncryption(MessegeElement);
+        ShiftRowsFoREncryption(MessegeElement);
         MixColumn(MessegeElement);
-        AddRoundKey(MessegeElement, key);
+        AddRoundKeyForEncryption(MessegeElement, key);
     }
-    SubBytes(MessegeElement);
-    ShiftRows(MessegeElement);
-    AddRoundKey(MessegeElement, key);
+    SubBytesForEncryption(MessegeElement);
+    ShiftRowsFoREncryption(MessegeElement);
+    AddRoundKeyForEncryption(MessegeElement, key);
 }
-void AES_Decryption(unsigned char *text, int length)
+void AESDecryption(unsigned char *messages)
 {
+
 }
 int main()
 {
     freopen("input.txt","r",stdin);
     freopen("output.txt","w",stdout);
     unsigned char message[] = "I am Sazid";
+    int LengthOfMessage=sizeof(message),LengthOfExtendedMessage;
     unsigned char key[16] =
         {
-            1, 2, 3, 4,
-            5, 6, 7, 8,
-            9, 10, 11, 12,
-            13, 14, 15, 16};
-    AES_Encrypt(message, key);
+          2, 7, 15, 16,
+          28,12, 2, 6,
+          10, 7, 15,88,
+          9, 48, 12, 14
+        };
+    cout<<"Text to Encrypt : "<<endl;
+    for(int i=0;i<sizeof(message);i++)
+    {
+        cout<<message[i];
+    }
+    cout<<endl;
+    KeyExpansionAlgorithm(message);
+    if(LengthOfMessage%16!=0)
+    {
+        LengthOfExtendedMessage=LengthOfMessage+(16-(LengthOfMessage%16));
+    }
+    else 
+    {
+        LengthOfExtendedMessage=LengthOfMessage;
+    }
+    unsigned char EncryptedMessage[LengthOfExtendedMessage+1];
+    for(int i=0;i<LengthOfExtendedMessage;i++)
+    {
+        if(i>LengthOfMessage)
+        {
+            EncryptedMessage[i]='0';
+        }
+        else 
+        {
+            EncryptedMessage[i]=message[i];
+        }
+    }
+    EncryptedMessage[LengthOfExtendedMessage]='\0';
+    for (int i=0;i<LengthOfExtendedMessage;i++)
+    {
+        
+    }
+    AESEncryption(message, key);
     return 0;
 }
