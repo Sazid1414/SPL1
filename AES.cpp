@@ -360,7 +360,7 @@ void AESEncryption(unsigned char *messages, unsigned char *key)
     {
         MessegeElement[i] = messages[i];
     }
-    KeyExpansionAlgorithm(MessegeElement);
+    KeyExpansionAlgorithm(key);
     AddRoundKeyForEncryption(MessegeElement, key);
     for (int i = 1; i < NumberOfRound; i++)
     {
