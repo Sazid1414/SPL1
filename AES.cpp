@@ -392,7 +392,7 @@ void AESDecryption(unsigned char *CipherText, int lengthOfMessage)
     }
     Inverse_Mix_Column(CipherText);
 }
-void DecryptedText(unsigned char *messages, int lengthOfMessage)
+void DecryptedText(unsigned char messages[], int lengthOfMessage)
 {
     for (int i = 0; i < lengthOfMessage; i++)
     {
