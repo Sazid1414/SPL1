@@ -464,10 +464,11 @@ void DecryptedText(unsigned char *messages, int LengthOFMessage)
 //     size++;
 //     return size;
 // }
-// void TextToEncrypt(unsigned char* messages)
+// void Text(unsigned char* messages)
 // {
 //     cout<<"Text To Encrypt(Plain Text)"<<endl;
-//     for(int i=0;i<sizeof(messages);i++)
+//     int i=0;
+//     while(messages[i]!='\0')
 //     {
 //         cout<<messages[i];
 //     }
@@ -485,6 +486,10 @@ void DecryptedText(unsigned char *messages, int LengthOFMessage)
 //         LengthOFExtendedMesasage = LengthOFMessage + (16 - (LengthOFMessage % 16));
 
 //     }
+    // unsigned char key[]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+    // AESEncryption(message,key);
+    // AESDecryption(message,sizeof(message));
+    // Text(message);Text(message);
 //     PaddingExtraBytes(message,key,LengthOFExtendedMesasage,LengthOFMessage);
 // }
 // void PaddingExtraBytes(unsigned char* message,unsigned char* key,int LengthOfExtendedMessage,int LengthOfMessage)
@@ -547,11 +552,14 @@ void DecryptedText(unsigned char *messages, int LengthOFMessage)
 //}
 int main()
 {
-    freopen("input.txt","r",stdin);
-    freopen("output.txt","w",stdout);
+    // freopen("input.txt","r",stdin);
+    // freopen("output.txt","w",stdout);
     unsigned char message[]="I am Mahin";
+    // Text(message);
     unsigned char key[]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
     AESEncryption(message,key);
     AESDecryption(message,sizeof(message));
-    return 0;
+    cout<<"Decrypted Message:"<<endl;
+    // cout<<message;
+  return 0;
 }
