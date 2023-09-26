@@ -120,24 +120,24 @@ unsigned char multiplicationTableFor14[] = {0x00, 0x0e, 0x1c, 0x12, 0x38, 0x36, 
                                             0xd7, 0xd9, 0xcb, 0xc5, 0xef, 0xe1, 0xf3, 0xfd, 0xa7, 0xa9, 0xbb, 0xb5, 0x9f, 0x91, 0x83, 0x8d};
 
 unsigned char Inverse_SBox[256] = {0x52, 0x09, 0x6A, 0xD5, 0x30, 0x36, 0xA5, 0x38, 0xBF, 0x40, 0xA3, 0x9E, 0x81, 0xF3, 0xD7, 0xFB,
-                           0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0,
-                           0xB7, 0xFD, 0x93, 0x26, 0x36, 0x3F, 0xF7, 0xCC, 0x34, 0xA5, 0xE5, 0xF1, 0x71, 0xD8, 0x31, 0x15,
-                           0x04, 0xC7, 0x23, 0xC3, 0x18, 0x96, 0x05, 0x9A, 0x07, 0x12, 0x80, 0xE2, 0xEB, 0x27, 0xB2, 0x75,
-                           0x09, 0x83, 0x2C, 0x1A, 0x1B, 0x6E, 0x5A, 0xA0, 0x52, 0x3B, 0xD6, 0xB3, 0x29, 0xE3, 0x2F, 0x84,
-                           0x53, 0xD1, 0x00, 0xED, 0x20, 0xFC, 0xB1, 0x5B, 0x6A, 0xCB, 0xBE, 0x39, 0x4A, 0x4C, 0x58, 0xCF,
-                           0xD0, 0xEF, 0xAA, 0xFB, 0x43, 0x4D, 0x33, 0x85, 0x45, 0xF9, 0x02, 0x7F, 0x50, 0x3C, 0x9F, 0xA8,
-                           0x51, 0xA3, 0x40, 0x8F, 0x92, 0x9D, 0x38, 0xF5, 0xBC, 0xB6, 0xDA, 0x21, 0x10, 0xFF, 0xF3, 0xD2,
-                           0xCD, 0x0C, 0x13, 0xEC, 0x5F, 0x97, 0x44, 0x17, 0xC4, 0xA7, 0x7E, 0x3D, 0x64, 0x5D, 0x19, 0x73,
-                           0x60, 0x81, 0x4F, 0xDC, 0x22, 0x2A, 0x90, 0x88, 0x46, 0xEE, 0xB8, 0x14, 0xDE, 0x5E, 0x0B, 0xDB,
-                           0xE0, 0x32, 0x3A, 0x0A, 0x49, 0x06, 0x24, 0x5C, 0xC2, 0xD3, 0xAC, 0x62, 0x91, 0x95, 0xE4, 0x79,
-                           0xE7, 0xC8, 0x37, 0x6D, 0x8D, 0xD5, 0x4E, 0xA9, 0x6C, 0x56, 0xF4, 0xEA, 0x65, 0x7A, 0xAE, 0x08,
-                           0xBA, 0x78, 0x25, 0x2E, 0x1C, 0xA6, 0xB4, 0xC6, 0xE8, 0xDD, 0x74, 0x1F, 0x4B, 0xBD, 0x8B, 0x8A,
-                           0x70, 0x3E, 0xB5, 0x66, 0x48, 0x03, 0xF6, 0x0E, 0x61, 0x35, 0x57, 0xB9, 0x86, 0xC1, 0x1D, 0x9E,
-                           0xE1, 0xF8, 0x98, 0x11, 0x69, 0xD9, 0x8E, 0x94, 0x9B, 0x1E, 0x87, 0xE9, 0xCE, 0x55, 0x28, 0xDF,
-                           0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16};
+                                   0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0,
+                                   0xB7, 0xFD, 0x93, 0x26, 0x36, 0x3F, 0xF7, 0xCC, 0x34, 0xA5, 0xE5, 0xF1, 0x71, 0xD8, 0x31, 0x15,
+                                   0x04, 0xC7, 0x23, 0xC3, 0x18, 0x96, 0x05, 0x9A, 0x07, 0x12, 0x80, 0xE2, 0xEB, 0x27, 0xB2, 0x75,
+                                   0x09, 0x83, 0x2C, 0x1A, 0x1B, 0x6E, 0x5A, 0xA0, 0x52, 0x3B, 0xD6, 0xB3, 0x29, 0xE3, 0x2F, 0x84,
+                                   0x53, 0xD1, 0x00, 0xED, 0x20, 0xFC, 0xB1, 0x5B, 0x6A, 0xCB, 0xBE, 0x39, 0x4A, 0x4C, 0x58, 0xCF,
+                                   0xD0, 0xEF, 0xAA, 0xFB, 0x43, 0x4D, 0x33, 0x85, 0x45, 0xF9, 0x02, 0x7F, 0x50, 0x3C, 0x9F, 0xA8,
+                                   0x51, 0xA3, 0x40, 0x8F, 0x92, 0x9D, 0x38, 0xF5, 0xBC, 0xB6, 0xDA, 0x21, 0x10, 0xFF, 0xF3, 0xD2,
+                                   0xCD, 0x0C, 0x13, 0xEC, 0x5F, 0x97, 0x44, 0x17, 0xC4, 0xA7, 0x7E, 0x3D, 0x64, 0x5D, 0x19, 0x73,
+                                   0x60, 0x81, 0x4F, 0xDC, 0x22, 0x2A, 0x90, 0x88, 0x46, 0xEE, 0xB8, 0x14, 0xDE, 0x5E, 0x0B, 0xDB,
+                                   0xE0, 0x32, 0x3A, 0x0A, 0x49, 0x06, 0x24, 0x5C, 0xC2, 0xD3, 0xAC, 0x62, 0x91, 0x95, 0xE4, 0x79,
+                                   0xE7, 0xC8, 0x37, 0x6D, 0x8D, 0xD5, 0x4E, 0xA9, 0x6C, 0x56, 0xF4, 0xEA, 0x65, 0x7A, 0xAE, 0x08,
+                                   0xBA, 0x78, 0x25, 0x2E, 0x1C, 0xA6, 0xB4, 0xC6, 0xE8, 0xDD, 0x74, 0x1F, 0x4B, 0xBD, 0x8B, 0x8A,
+                                   0x70, 0x3E, 0xB5, 0x66, 0x48, 0x03, 0xF6, 0x0E, 0x61, 0x35, 0x57, 0xB9, 0x86, 0xC1, 0x1D, 0x9E,
+                                   0xE1, 0xF8, 0x98, 0x11, 0x69, 0xD9, 0x8E, 0x94, 0x9B, 0x1E, 0x87, 0xE9, 0xCE, 0x55, 0x28, 0xDF,
+                                   0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16};
 
 unsigned char RoundConstant[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
-void SubstituteByteForEncryption(unsigned char* messages)
+void SubstituteByteForEncryption(unsigned char *messages)
 {
     cout << "Subbyte  Funcion :";
     for (int i = 0; i < 16; i++)
@@ -146,7 +146,6 @@ void SubstituteByteForEncryption(unsigned char* messages)
         cout << messages[i];
     }
     cout << endl;
-
 }
 void InverseSubByteForDecryption(unsigned char *messege)
 {
@@ -158,62 +157,62 @@ void InverseSubByteForDecryption(unsigned char *messege)
     }
     cout << endl;
 }
-void keyExpansion(unsigned char* key)
+void keyExpansion(unsigned char *key)
 {
-    for(int i=0;i<16;i+=4)
+    for (int i = 0; i < 16; i += 4)
     {
-        ExtendedKey[i]=key[i];
+        ExtendedKey[i] = key[i];
     }
-    for(int i=16;i<176;i++)
+    for (int i = 16; i < 176; i++)
     {
         unsigned char word[4];
-        for(int j=0;j<4;j++)
+        for (int j = 0; j < 4; j++)
         {
-            word[j]=ExtendedKey[i+j-4];
+            word[j] = ExtendedKey[i + j - 4];
         }
-        if(i%16==0)
+        if (i % 16 == 0)
         {
-            unsigned char temp=word[0];
-            word[0]=word[1];
-            word[1]=word[2];
-            word[2]=word[3];
-            word[3]=temp;
-            for(int i=0;i<4;i++)
+            unsigned char temp = word[0];
+            word[0] = word[1];
+            word[1] = word[2];
+            word[2] = word[3];
+            word[3] = temp;
+            for (int i = 0; i < 4; i++)
             {
-                word[i]^=SBox[word[i]];
+                word[i] ^= SBox[word[i]];
             }
-            word[0]^=RoundConstant[(i/16)-1];
+            word[0] ^= RoundConstant[(i / 16) - 1];
         }
-        for(int k=0;k<4;k++)
+        for (int k = 0; k < 4; k++)
         {
-            ExtendedKey[i+k]=word[k]^ExtendedKey[i+k-16];
+            ExtendedKey[i + k] = word[k] ^ ExtendedKey[i + k - 16];
         }
     }
 }
 
-void addRoundKeyForEncryption(unsigned char* messages,int NumOfRound)
+void addRoundKeyForEncryption(unsigned char *messages, int NumOfRound)
 {
-    cout<<"Inside AddRound Key Function :"<<endl;
-    for(int i=0;i<16;i++)
+    cout << "Inside AddRound Key Function :" << endl;
+    for (int i = 0; i < 16; i++)
     {
-        messages[i]^=ExtendedKey[NumOfRound*16+1];
-        cout<<messages[i];
+        messages[i] ^= ExtendedKey[NumOfRound * 16 + 1];
+        cout << messages[i];
     }
-    cout<<endl;
+    cout << endl;
 }
 void AddRoundKeyForDecryption(unsigned char *MessegeElement, int round)
 {
     cout << "Add RoundKeyForDecryption: " << endl;
     for (int i = 0; i < 16; i++)
     {
-        MessegeElement[i] ^= ExtendedKey[i+160 - round * 16 ];
+        MessegeElement[i] ^= ExtendedKey[i + 160 - round * 16];
         cout << MessegeElement[i];
     }
     cout << endl;
 }
-void ShiftRowForEncryption(unsigned char* messages)
+void ShiftRowForEncryption(unsigned char *messages)
 {
-unsigned char temporary[16];
+    unsigned char temporary[16];
     temporary[0] = messages[0];
     temporary[1] = messages[5];
     temporary[2] = messages[10];
@@ -272,7 +271,7 @@ void InverseShiftRowForDecryption(unsigned char *messages)
     }
     cout << endl;
 }
-void mixColumnForEncryption(unsigned char* messages)
+void mixColumnForEncryption(unsigned char *messages)
 {
 
     unsigned char temporary[16];
@@ -333,21 +332,20 @@ void Inverse_Mix_Column(unsigned char *MessegeElement)
         cout << endl;
     }
 }
-void AESEncryption(unsigned char * message,unsigned char* key)
+void AESEncryption(unsigned char *message, unsigned char *key)
 {
     keyExpansion(key);
-    addRoundKeyForEncryption(message,0);
-    for(int i=1;i<10;i++)
+    addRoundKeyForEncryption(message, 0);
+    for (int i = 1; i < 10; i++)
     {
         SubstituteByteForEncryption(message);
         ShiftRowForEncryption(message);
         mixColumnForEncryption(message);
-        addRoundKeyForEncryption(key,i);
+        addRoundKeyForEncryption(key, i);
     }
     SubstituteByteForEncryption(message);
     ShiftRowForEncryption(message);
-    addRoundKeyForEncryption(key,10);
-
+    addRoundKeyForEncryption(key, 10);
 }
 void AESDecryption(unsigned char *CipherText, int LengthOFMessage)
 {
@@ -359,7 +357,6 @@ void AESDecryption(unsigned char *CipherText, int LengthOFMessage)
         AddRoundKeyForDecryption(CipherText, i);
     }
     Inverse_Mix_Column(CipherText);
-
 }
 void CipherText(unsigned char *EncryptedText, int lengthOfEncryptedMessage)
 {
@@ -368,7 +365,7 @@ void CipherText(unsigned char *EncryptedText, int lengthOfEncryptedMessage)
         cout << EncryptedText[i];
     }
     cout << endl;
-    AESDecryption(EncryptedText,lengthOfEncryptedMessage);
+    AESDecryption(EncryptedText, lengthOfEncryptedMessage);
 }
 void DecryptedText(unsigned char *messages, int LengthOFMessage)
 {
@@ -381,17 +378,17 @@ void DecryptedText(unsigned char *messages, int LengthOFMessage)
             break;
         }
     }
-}void MessageHandler(unsigned char* message,unsigned char* key)
+}
+void MessageHandler(unsigned char *message, unsigned char *key)
 {
-    int LengthOFMessage=sizeof(message),LengthOFExtendedMesasage;
-      if (LengthOFMessage % 16 == 0)
+    int LengthOFMessage = sizeof(message), LengthOFExtendedMesasage;
+    if (LengthOFMessage % 16 == 0)
     {
-       LengthOFExtendedMesasage = LengthOFMessage;
+        LengthOFExtendedMesasage = LengthOFMessage;
     }
     else
     {
         LengthOFExtendedMesasage = LengthOFMessage + (16 - (LengthOFMessage % 16));
-
     }
     // PaddingExtraBytes(message,key,LengthOFExtendedMesasage,LengthOFMessage);
 }
@@ -409,12 +406,12 @@ void DecryptedText(unsigned char *messages, int LengthOFMessage)
 //             EncryptedMessage[i] = message[i];
 //         }
 //     }
-//     EncryptedMessage[LengthOfExtendedMessage] = '\0';  
-//     BlockByBlockEncryption(EncryptedMessage,LengthOfExtendedMessage,key); 
+//     EncryptedMessage[LengthOfExtendedMessage] = '\0';
+//     BlockByBlockEncryption(EncryptedMessage,LengthOfExtendedMessage,key);
 // }
 // void BlockByBlockEncryption(unsigned char* EncryptedMessage,int LengthOfExtendedMessage,unsigned char* key)
 // {
-     
+
 //     for (int i = 0; i < LengthOfExtendedMessage; i += 16)
 //     {
 //         unsigned char temporary[16];
@@ -486,10 +483,10 @@ void DecryptedText(unsigned char *messages, int LengthOFMessage)
 //         LengthOFExtendedMesasage = LengthOFMessage + (16 - (LengthOFMessage % 16));
 
 //     }
-    // unsigned char key[]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-    // AESEncryption(message,key);
-    // AESDecryption(message,sizeof(message));
-    // Text(message);Text(message);
+// unsigned char key[]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+// AESEncryption(message,key);
+// AESDecryption(message,sizeof(message));
+// Text(message);Text(message);
 //     PaddingExtraBytes(message,key,LengthOFExtendedMesasage,LengthOFMessage);
 // }
 // void PaddingExtraBytes(unsigned char* message,unsigned char* key,int LengthOfExtendedMessage,int LengthOfMessage)
@@ -506,12 +503,12 @@ void DecryptedText(unsigned char *messages, int LengthOFMessage)
 //             EncryptedMessage[i] = message[i];
 //         }
 //     }
-//     EncryptedMessage[LengthOfExtendedMessage] = '\0';  
-//     BlockByBlockEncryption(EncryptedMessage,LengthOfExtendedMessage,key); 
+//     EncryptedMessage[LengthOfExtendedMessage] = '\0';
+//     BlockByBlockEncryption(EncryptedMessage,LengthOfExtendedMessage,key);
 // }
 // void BlockByBlockEncryption(unsigned char* EncryptedMessage,int LengthOfExtendedMessage,unsigned char* key)
 // {
-     
+
 //     for (int i = 0; i < LengthOfExtendedMessage; i += 16)
 //     {
 //         unsigned char temporary[16];
@@ -548,18 +545,18 @@ void DecryptedText(unsigned char *messages, int LengthOFMessage)
 //             DecryptedMessage[i + 16] = '\0';
 //         }
 //     }
-  //  DecryptedText(DecryptedMessage,sizeof(DecryptedMessage));
+//  DecryptedText(DecryptedMessage,sizeof(DecryptedMessage));
 //}
 int main()
 {
     // freopen("input.txt","r",stdin);
     // freopen("output.txt","w",stdout);
-    unsigned char message[]="I am Mahin";
+    unsigned char message[] = "I am Mahin";
     // Text(message);
-    unsigned char key[]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-    AESEncryption(message,key);
-    AESDecryption(message,sizeof(message));
-    cout<<"Decrypted Message:"<<endl;
+    unsigned char key[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+    AESEncryption(message, key);
+    AESDecryption(message, sizeof(message));
+    cout << "Decrypted Message:" << endl;
     // cout<<message;
-  return 0;
+    return 0;
 }
