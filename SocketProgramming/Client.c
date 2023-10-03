@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include<string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -32,5 +33,7 @@ int main()
     printf("Connection Successful..");
     printf("\n");
    }
-    return 0;
+   char buffer[1024];
+   send(socketFD,buffer,strlen(buffer));
+   return 0;
 }
