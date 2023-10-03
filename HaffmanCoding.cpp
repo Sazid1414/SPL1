@@ -66,6 +66,7 @@ struct HuffmanTreeNode* MinimumValueOfNode(struct minHeap* MinHeap)
     MinHeap->array[0]=MinHeap->array[MinHeap->currentSize-1];
     --MinHeap->currentSize;
     minHeapify(MinHeap,0);
+    return temporaryNode;
 }
 void InsertNewNode(struct minHeap* MinHeap,struct HuffmanTreeNode* TreeNode)
 {
@@ -87,9 +88,9 @@ void BuildMinHeap(struct minHeap* MinHeap)
         minHeapify(MinHeap,i);
     }
 }
-void printArray(int array[])
+void printArray(int array[],int n)
 {
-    for(int i=0;i<sizeof(array);i++)
+    for(int i=0;i<n;i++)
     {
         cout<<array[i];
     }
@@ -105,6 +106,67 @@ struct minHeap* CreateandBuildMinHeap(char data[],int frequency[],int size)
     for(int i=0;i<size;i++)
     {
         MinHeap->array[i]=Node(data[i],frequency[i]);
-        
     }
+    MinHeap->currentSize=size;
+    BuildMinHeap(MinHeap);
+    return MinHeap;
+}
+struct HuffmanTreeNode* BuildHuffmanTree(char data[],int frequency[],int size)
+{
+    struct HuffmanTreeNode* left;
+    struct HuffmanTreeNode* right;
+    struct HuffmanTreeNode* top;
+    struct minHeap* MinHeap=CreateandBuildMinHeap(data,frequency,size);
+    while(!isSizeOne(MinHeap))
+    {
+        left=MinimumValueOfNode(MinHeap);
+        right=MinimumValueOfNode(MinHeap);
+        top=Node('$',left->frequency+right->frequency);
+        top->left=left;
+        top->right=right;
+        InsertNewNode(MinHeap,top);
+    }
+    return MinimumValueOfNode(MinHeap);
+}
+void printCodes(struct HuffmanTreeNode* root,int array[],int top)
+{
+    if(root->left)
+    {
+        array[top]=0;
+        printCodes(root->left,array,top+1);
+    }
+    if(root->right)
+    {
+        array[top]=1;
+        printCodes(root->right,array,top+1);
+    }
+    if(LeafNodeChecker(root))
+    {
+        cout<<root->data<<" : ";
+        printArray(array,top);
+    }
+}
+void HuffmanCodes(char data[],int frequency[],int size)
+{
+    struct HuffmanTreeNode* root=BuildHuffmanTree(data,frequency,size);
+    int array[100],top=0;
+    printCodes(root,array,top);
+}
+int main() {
+    freopen("input.txt","r",stdin);
+    freopen("output.txt","w",stdout);
+    int size;
+   // printf("Enter the size of the character and frequency arrays: ");
+    scanf("%d", &size);
+    char arr[size];
+    int freq[size];
+ //   printf("Enter characters and frequencies:\n");
+    for (int i = 0; i < size; i++) {
+     //   printf("Character %d: ", i + 1);
+        scanf(" %c", &arr[i]); 
+      //  printf("Frequency %d: ", i + 1);
+        scanf("%d", &freq[i]);
+    }
+    HuffmanCodes(arr, freq, size);
+    return 0;
 }
