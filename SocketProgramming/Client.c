@@ -33,7 +33,9 @@ int main()
     printf("Connection Successful..");
     printf("\n");
    }
+   char *message="GET\\HTTP/1.1\r\nHost:google.com\r\n\r\n";
+   send(socketFD,message,strlen(message),0);
    char buffer[1024];
-   send(socketFD,buffer,strlen(buffer));
+   //recv()
    return 0;
 }
