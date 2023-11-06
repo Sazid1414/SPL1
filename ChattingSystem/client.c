@@ -63,28 +63,55 @@ void recv_msg_handler()
     bzero(message,BUFFER_SIZE);
   }
 }
+// void send_msg_handler()
+// {
+//   char buffer[BUFFER_SIZE] = {};
+//   char message[BUFFER_SIZE+NAME_LEN] = {};
+//   while(1)
+//   {
+//     str_overwrite_stdout();
+//     fgets(buffer,BUFFER_SIZE,stdin);
+//     str_trim_lf(buffer,BUFFER_SIZE);
+//     if(strcmp(buffer,"exit") == 0)
+//     {
+//       break;
+//     }
+//     else{
+//       sprintf(message,"%s: %s",name,message);
+//       send(sockfd,message,strlen(message),0);
+//     }
+//     bzero(buffer,BUFFER_SIZE);
+//     bzero(message,BUFFER_SIZE+NAME_LEN);
+//   }
+//   catch_ctrl_c_and_exit(2);
+// }
 void send_msg_handler()
 {
   char buffer[BUFFER_SIZE] = {};
-  char message[BUFFER_SIZE+NAME_LEN] = {};
-  while(1)
+  char message[BUFFER_SIZE + NAME_LEN + 10] = {}; 
+  while (1)
   {
     str_overwrite_stdout();
-    fgets(buffer,BUFFER_SIZE,stdin);
-    str_trim_lfirst(buffer,BUFFER_SIZE);
-    if(strcmp(buffer,"exit") == 0)
+    fgets(buffer, BUFFER_SIZE, stdin);
+    str_trim_lf(buffer, BUFFER_SIZE); 
+
+    if (strcmp(buffer, "exit") == 0)
     {
       break;
     }
-    else{
-      sprintf(message,"%s: %s",name,message);
-      send(sockfd,message,strlen(message),0);
+    else {
+      sprintf(message, "%s: %s\n", name, buffer); 
+      send(sockfd, message, strlen(message), 0);
     }
-    bzero(buffer,BUFFER_SIZE);
-    bzero(message,BUFFER_SIZE+NAME_LEN);
+
+    bzero(buffer, BUFFER_SIZE);
+    bzero(message, BUFFER_SIZE + NAME_LEN + 10);
   }
+
   catch_ctrl_c_and_exit(2);
 }
+
+
 int main(int argc, char **argv)
 {
   if (argc != 2)
