@@ -566,7 +566,6 @@ void PaddingExtraBytes(unsigned char* message,unsigned char* key,int LengthOfExt
     BlockByBlockEncryption(EncryptedMessage,LengthOfExtendedMessage,key);
 }
 
-
 void BlockByBlockEncryption(unsigned char* EncryptedMessage,int LengthOfExtendedMessage,unsigned char* key)
 {
 
