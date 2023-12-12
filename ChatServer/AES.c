@@ -1,5 +1,7 @@
-#include <bits/stdc++.h>
-using namespace std;
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <math.h>
 unsigned char ExtendedKey[176];
 unsigned char SBox[256] = {0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
                            0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0,
@@ -140,24 +142,24 @@ unsigned char RoundConstant[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80,
 
 void SubstituteByteForEncryption(unsigned char *messages)
 {
-    cout << "Subbyte  Funcion :";
+    //cout << "Subbyte  Funcion :";
     for (int i = 0; i < 16; i++)
     {
         messages[i] = SBox[messages[i]];
-        cout << messages[i];
+        //cout << messages[i];
     }
-    cout << endl;
+   // cout << endl;
 }
 
 void InverseSubByteForDecryption(unsigned char *messege)
 {
-    cout << "Inverse Sub Bytes" << endl;
+   // printf("Inverse Sub Bytes:");
     for (int i = 0; i < 16; i++)
     {
         messege[i] = Inverse_SBox[messege[i]];
-        cout << messege[i];
+        //cout << messege[i];
     }
-    cout << endl;
+  //  printf("\n");
 }
 
 void keyExpansion(unsigned char *key)
@@ -195,24 +197,24 @@ void keyExpansion(unsigned char *key)
 
 void addRoundKeyForEncryption(unsigned char *messages, int NumOfRound)
 {
-    cout << "Inside AddRound Key Function :" << endl;
+    //cout << "Inside AddRound Key Function :" << endl;
     for (int i = 0; i < 16; i++)
     {
         messages[i] ^= ExtendedKey[NumOfRound * 16 + 1];
-        cout << messages[i];
+       // cout << messages[i];
     }
-    cout << endl;
+    
 }
 
 void AddRoundKeyForDecryption(unsigned char *MessegeElement, int round)
 {
-    cout << "Add RoundKeyForDecryption: " << endl;
+   // cout << "Add RoundKeyForDecryption: " << endl;
     for (int i = 0; i < 16; i++)
     {
         MessegeElement[i] ^= ExtendedKey[i + 160 - round * 16];
-        cout << MessegeElement[i];
+        //cout << MessegeElement[i];
     }
-    cout << endl;
+    //cout << endl;
 }
 
 void ShiftRowForEncryption(unsigned char *messages)
@@ -237,13 +239,13 @@ void ShiftRowForEncryption(unsigned char *messages)
     temporary[13] = messages[1];
     temporary[14] = messages[6];
     temporary[15] = messages[11];
-    cout << "Shifting Row For Encryption:" << endl;
+    //cout << "Shifting Row For Encryption:" << endl;
     for (int i = 0; i < 16; i++)
     {
         messages[i] = temporary[i];
-        cout << messages[i];
+        //cout << messages[i];
     }
-    cout << endl;
+   // cout << endl;
 }
 
 void InverseShiftRowForDecryption(unsigned char *messages)
@@ -269,13 +271,13 @@ void InverseShiftRowForDecryption(unsigned char *messages)
     temporary[14] = messages[6];
     temporary[15] = messages[3];
 
-    cout << "Inverse Shift Rows Operation: " << endl;
+   // cout << "Inverse Shift Rows Operation: " << endl;
     for (int i = 0; i < 16; i++)
     {
         messages[i] = temporary[i];
-        cout << messages[i];
+       // cout << messages[i];
     }
-    cout << endl;
+   // cout << endl;
 }
 
 void mixColumnForEncryption(unsigned char *messages)
@@ -301,13 +303,13 @@ void mixColumnForEncryption(unsigned char *messages)
             temporary[i] = multiplicationTableFor2[messages[i]] ^ multiplicationTableFor3[messages[i - 3]] ^ messages[i - 1] ^ messages[i - 2];
         }
     }
-    cout << "Mix Column Operation: " << endl;
+   // cout << "Mix Column Operation: " << endl;
     for (int i = 0; i < 16; i++)
     {
         messages[i] = temporary[i];
-        cout << messages[i];
+       // cout << messages[i];
     }
-    cout << endl;
+   // cout << endl;
 }
 
 void Inverse_Mix_Column(unsigned char *MessegeElement)
@@ -331,13 +333,13 @@ void Inverse_Mix_Column(unsigned char *MessegeElement)
         {
             temporary[i] = multiplicationTableFor14[MessegeElement[i]] ^ multiplicationTableFor11[MessegeElement[i + 1]] ^ multiplicationTableFor13[MessegeElement[i + 2]] ^ multiplicationTableFor9[MessegeElement[i + 3]];
         }
-        cout << "Inverse mix Column" << endl;
+        //cout << "Inverse mix Column" << endl;
         for (int i = 0; i < 16; i++)
         {
             MessegeElement[i] = temporary[i];
-            cout << MessegeElement[i];
+            //cout << MessegeElement[i];
         }
-        cout << endl;
+        //cout << endl;
     }
 }
 
@@ -371,9 +373,9 @@ void CipherText(unsigned char *EncryptedText, int lengthOfEncryptedMessage)
 {
     for (int i = 0; i < lengthOfEncryptedMessage; i++)
     {
-        cout << EncryptedText[i];
+       // cout << EncryptedText[i];
     }
-    cout << endl;
+   // cout << endl;
     AESDecryption(EncryptedText, lengthOfEncryptedMessage);
 }
 
@@ -413,7 +415,7 @@ void DecryptedText(unsigned char *messages, int LengthOFMessage)
 {
     for (int i = 0; i < LengthOFMessage; i++)
     {
-        cout << messages[i];
+       // cout << messages[i];
         if (messages[i + 1] == '0')
         {
             messages[i + 1] = '\0';
@@ -513,10 +515,10 @@ int GetSizeOFString(unsigned char *message)
     return size;
 }
 
-
+/*
 void Text(unsigned char* messages)
 {
-    cout<<"Text To Encrypt(Plain Text)"<<endl;
+   // cout<<"Text To Encrypt(Plain Text)"<<endl;
     int i=0;
     while(messages[i]!='\0')
     {
@@ -525,7 +527,7 @@ void Text(unsigned char* messages)
     cout<<endl;
 }
 
-
+*/
 void MessageHandler(unsigned char* message,unsigned char* key)
 {
     int LengthOFMessage=sizeof(message),LengthOFExtendedMesasage;
@@ -541,7 +543,7 @@ void MessageHandler(unsigned char* message,unsigned char* key)
 unsigned char key[]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
 AESEncryption(message,key);
 AESDecryption(message,sizeof(message));
-Text(message);Text(message);
+//Text(message);Text(message);
     PaddingExtraBytes(message,key,LengthOFExtendedMesasage,LengthOFMessage);
 }
 
@@ -611,14 +613,16 @@ void Decryption(unsigned char* EncryptedMessage,int LengthOfExtendedMessage,int 
 
 int main()
 {
+    /*
     freopen("input.txt","r",stdin);
     freopen("output.txt","w",stdout);
+    */
     unsigned char message[] = "I am Mahin";
-    Text(message);
+   // Text(message);
     unsigned char key[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
     AESEncryption(message, key);
     AESDecryption(message, sizeof(message));
-    cout << "Decrypted Message:" << endl;
-    cout<<message;
+   // cout << "Decrypted Message:" << endl;
+   // cout<<message;
     return 0;
 }

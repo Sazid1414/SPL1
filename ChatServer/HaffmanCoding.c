@@ -1,6 +1,5 @@
-#include<iostream>
-#include<cstdlib>
-using namespace std;
+#include<stdio.h>
+#include<stdlib.h>
 struct HuffmanTreeNode
 {
    char data;
@@ -90,12 +89,12 @@ void BuildMinHeap(struct minHeap* MinHeap)
 }
 void printArray(int array[],int n)
 {
-    for(int i=0;i<n;i++)
+    /*for(int i=0;i<n;i++)
     {
         cout<<array[i];
     }
-    cout<<endl;
-}
+    cout<<endl;*/
+    }
 int LeafNodeChecker(struct HuffmanTreeNode* root)
 {
     return !(root->left)&&!root->right;
@@ -142,7 +141,7 @@ void printCodes(struct HuffmanTreeNode* root,int array[],int top)
     }
     if(LeafNodeChecker(root))
     {
-        cout<<root->data<<" : ";
+        //cout<<root->data<<" : ";
         printArray(array,top);
     }
 }
@@ -153,8 +152,8 @@ void HuffmanCodes(char data[],int frequency[],int size)
     printCodes(root,array,top);
 }
 int main() {
-    freopen("input.txt","r",stdin);
-    freopen("output.txt","w",stdout);
+    //freopen("input.txt","r",stdin);
+    //freopen("output.txt","w",stdout);
     int size;
    // printf("Enter the size of the character and frequency arrays: ");
     scanf("%d", &size);

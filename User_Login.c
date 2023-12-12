@@ -1,5 +1,6 @@
-#include<bits/stdc++.h>
-using namespace std;
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
 int num_of_user;
 struct user
 {
@@ -10,46 +11,44 @@ struct user
 void register_user()
 {
     int i;
-    cout<<"Enter the number of users you want to register"<<endl;
-    cin>>num_of_user;
-    for(i=0;i<num_of_user;i++)
+    for(i=0;i<100;i++)
     {
-        cout<<"Enter the email of the user"<<endl;
-        cin>>user[i].email;
+        printf("Enter the email of the user:\n");
+        scanf("%s",user[i].email);
         for(int i=0;i<num_of_user;i++)
         {
             if(strcmp(user[i].email,user[i].email)==0)
             {
-                cout<<"Email already exists"<<endl;
+                printf("Email already exists,Try with another email");
                 return;
             }
         }
-        cout<<"Enter the password of the user"<<endl;
-        cin>>user[i].password;
-        cout<<"Enter the name of the user"<<endl;
-        cin>>user[i].name;
+        printf("Enter the password of the user:\n");
+        scanf(user[i].password);
+        scanf("Enter the name of the user:\n");
+        scanf("%s",user[i].name);
     }
 }
 void login_user()
 {
     char email[100];
     char password[100];
-    cout<<"Enter the email of the user"<<endl;
-    cin>>email;
+    printf("Enter the email of the user:");
+    scanf("%s",email);
     for(int i=0;i<num_of_user;i++)
     {
         if(strcmp(user[i].email,email)==0)
         {
-            cout<<"Enter the password of the user"<<endl;
-            cin>>password;
+            //cout<<"Enter the password of the user"<<endl;
+            //cin>>password;
             if(strcmp(user[i].password,password)==0)
             {
-                cout<<"Login successful"<<endl;
+               // cout<<"Login successful"<<endl;
                 return;
             }
             else
             {
-                cout<<"Login unsuccessful"<<endl;
+               // cout<<"Login unsuccessful"<<endl;
                 return;
             }
         }
@@ -60,22 +59,22 @@ void FindUser()
     fopen("users.txt", "r");
     char email[100];
     char password[100];
-    cout<<"Enter the email of the user"<<endl;
-    cin>>email;
+   // cout<<"Enter the email of the user"<<endl;
+    //cin>>email;
     for(int i=0;i<num_of_user;i++)
     {
         if(strcmp(user[i].email,email)==0)
         {
-            cout<<"Enter the password of the user"<<endl;
-            cin>>password;
+            //cout<<"Enter the password of the user"<<endl;
+          //  cin>>password;
             if(strcmp(user[i].password,password)==0)
             {
-                cout<<"User Found"<<endl;
+               // cout<<"User Found"<<endl;
                 return;
             }
             else
             {
-                cout<<"This user is not registered !"<<endl;
+               // cout<<"This user is not registered !"<<endl;
                 return;
             }
         }
@@ -86,7 +85,7 @@ int main(){
    FILE *file=fopen64("user.txt", "r");
    if(file==NULL)
    {
-    cout<<"User not found"<<endl;
+    //cout<<"User not found"<<endl;
     fclose(file);
     return 0;
    }
@@ -99,22 +98,11 @@ int main(){
     }
     int options;
     do{
-        cout<<"1.Register"<<endl;
-        cout<<"2.Login"<<endl;
-        cout<<"3.Exit"<<endl;
-        cin>>options;
-        switch(options){
-            case 1:
-                register_user();
-                break;
-            case 2:
-                login_user();
-                break;
-            case 3:
-                break;
-            default:
-                cout<<"Invalid option"<<endl;
-        }
+       // cout<<"1.Register"<<endl;
+       // cout<<"2.Login"<<endl;
+       // cout<<"3.Exit"<<endl;
+        //cin>>options;
+      
     }
     while(options!=3);
 
