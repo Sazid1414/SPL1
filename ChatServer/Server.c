@@ -9,11 +9,11 @@
 #include <pthread.h>
 #include <sys/types.h>
 #include <signal.h>
+#include "AES.h"
 #define MAX_CLIENTS 100
 #define BUFFER_SZ 2048
 static _Atomic unsigned int cli_count = 0;
 static int uid = 10;
-#define MAX_USERS 100
 #define MAX_STRING_LENGTH 100
 struct User
 {
@@ -164,6 +164,7 @@ void *handle_client(void *arg)
 
 				str_trim_lf(buff_out, strlen(buff_out));
 				printf("%s -> %s\n", buff_out, cli->name);
+				// printf("%s:", buff_out);
 			}
 		}
 		else if (receive == 0 || strcmp(buff_out, "exit") == 0)
@@ -283,7 +284,6 @@ int login_user()
 	}
 	return 1;
 }
-
 int main(int argc, char **argv)
 {
 	int options;
@@ -305,6 +305,7 @@ int main(int argc, char **argv)
 			{
 				continueLoop = 1;
 			}
+			
 			break;
 		case 2:
 			if (login_user())
@@ -320,6 +321,11 @@ int main(int argc, char **argv)
 		}
 	} while (continueLoop == 0);
 
+	if (argc != 2)
+	{
+		printf("Usage: %s <port>\n", argv[0]);
+		return EXIT_FAILURE;
+	}
 	if (argc != 2)
 	{
 		printf("Usage: %s <port>\n", argv[0]);

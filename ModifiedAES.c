@@ -152,12 +152,104 @@ unsigned char InverseSBox[256] =
         0xA0, 0xE0, 0x3B, 0x4D, 0xAE, 0x2A, 0xF5, 0xB0, 0xC8, 0xEB, 0xBB, 0x3C, 0x83, 0x53, 0x99, 0x61,
         0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D};
 
-unsigned char round_constant[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
+unsigned char RoundConstantForAES[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
 unsigned char ExtendedKey[176];
-#define Num_of_Rounds 10
-#define PaddingCharacter '0'
+int  Num_of_Rounds=10;
+char PaddingCharacter='0';
+void KeyExpansionForEncryption(unsigned char *key);
+void AddRoundKeyForEncryption(unsigned char *message, int round);
+void ShiftRowForEncryption(unsigned char *messages);
+void SubstituteByteForEncryption(unsigned char *message);
+void MixColumnForEncryption(unsigned char *messages);
+void AESEncryption(unsigned char *message);
+void PrintingEncryptedMessage(unsigned char *messages, int length);
+void AddRoundKeyForDecryption(unsigned char *messages, int round);
+void InverseShiftRowForDecryption(unsigned char *messages);
+void InverseSubsituteByte(unsigned char *messages);
+void InverseMixColumnForDecryption(unsigned char *messages);
+void AESDecryption(unsigned char *ciphertext);
+void PrintingDecryptedMessage(unsigned char *text, int length);
+void printText(const unsigned char *text, int length);
+void padText(unsigned char *text, int *textLength, int blockSize);
+void encryptText(unsigned char *textToEncrypt, int textLength, const unsigned char *key);
+void decryptText(const unsigned char *encryptedText, int textLength) ;
+int main()
+{
+    unsigned char textToEncrypt[] = "Hello There! My name is Sazid";
+    unsigned char key[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
 
-void key_expansion(unsigned char *Key)
+    printf("\nText To Encrypt:");
+    for (int i = 0; i < sizeof(textToEncrypt); i++)
+    {
+        printf("%c", textToEncrypt[i]);
+    }
+    KeyExpansionForEncryption(key);
+    int LengthOfTheText= sizeof(textToEncrypt) - 1;
+    int extended_length;
+    if (LengthOfTheText% 16 != 0)
+    {
+        extended_length = LengthOfTheText+ (16 - (LengthOfTheText% 16));
+    }
+    else
+    {
+        extended_length = LengthOfTheText;
+    }
+    unsigned char encrypted_text[extended_length + 1];
+    for (int i = 0; i < extended_length; i++)
+    {
+        if (i < LengthOfTheText)
+        {
+            encrypted_text[i] = textToEncrypt[i];
+        }
+        else
+        {
+            encrypted_text[i] = PaddingCharacter;
+        }
+        if (i + 1 == extended_length)
+        {
+            encrypted_text[i + 1] = '\0';
+        }
+    }
+    for (int i = 0; i < extended_length; i = i + 16)
+    {
+        unsigned char bag[16];
+        for (int k = 0; k < 16; k++)
+        {
+            bag[k] = encrypted_text[i + k];
+        }
+        AESEncryption(bag);
+
+        for (int k = 0; k < 16; k++)
+        {
+            encrypted_text[i + k] = bag[k];
+        }
+    }
+    printf("\nCipher Text:");
+    PrintingEncryptedMessage(encrypted_text, sizeof(encrypted_text));
+    printf("\n");
+    unsigned char decrypted_text[extended_length + 1];
+    for (int i = 0; i < LengthOfTheText; i = i + 16)
+    {
+        unsigned char temp[16];
+        for (int j = 0; j < 16; j++)
+        {
+            temp[j] = encrypted_text[i + j];
+        }
+        AESDecryption(temp);
+        for (int j = 0; j < 16; j++)
+        {
+            decrypted_text[i + j] = temp[j];
+        }
+        if (i + 16 == extended_length)
+        {
+            decrypted_text[i + 16] = '\0';
+        }
+    }
+    printf("Decrypyed Text:");
+    PrintingDecryptedMessage(decrypted_text, sizeof(decrypted_text));
+    printf("\n");
+}
+void KeyExpansionForEncryption(unsigned char *Key)
 {
     int i;
 
@@ -187,7 +279,7 @@ void key_expansion(unsigned char *Key)
             {
                 message[i] = SBox[message[i]];
             }
-            message[0] = message[0] ^ round_constant[(i / 16) - 1];
+            message[0] = message[0] ^ RoundConstantForAES[(i / 16) - 1];
         }
 
         for (int k = 0; k < 4; k++)
@@ -197,16 +289,21 @@ void key_expansion(unsigned char *Key)
         i += 4;
     }
 }
-
-void add_round_key(unsigned char *message, int round)
+void AddRoundKeyForEncryption(unsigned char *message, int round)
 {
     for (int i = 0; i < 16; i++)
     {
         message[i] = message[i] ^ ExtendedKey[round * 16 + i];
     }
 }
-
-void shift_row(unsigned char *messages)
+void AddRoundKeyForDecryption(unsigned char *messages, int round)
+{
+    for (int i = 0; i < 16; i++)
+    {
+        messages[i] = messages[i] ^ ExtendedKey[160 - round * 16 + i];
+    }
+}
+void ShiftRowForEncryption(unsigned char *messages)
 {
 
     unsigned char temporary[16];
@@ -232,16 +329,46 @@ void shift_row(unsigned char *messages)
         messages[i] = temporary[i];
     }
 }
+void InverseShiftRowForDecryption(unsigned char *messages)
+{
+    unsigned char temporary[16];
+    temporary[0] = messages[0];
+    temporary[1] = messages[13];
+    temporary[2] = messages[10];
+    temporary[3] = messages[7];
+    temporary[4] = messages[4];
+    temporary[5] = messages[1];
+    temporary[6] = messages[14];
+    temporary[7] = messages[11];
+    temporary[8] = messages[8];
+    temporary[9] = messages[5];
+    temporary[10] = messages[2];
+    temporary[11] = messages[15];
+    temporary[12] = messages[12];
+    temporary[13] = messages[9];
+    temporary[14] = messages[6];
+    temporary[15] = messages[3];
 
-void byte_substitution(unsigned char *message)
+    for (int i = 0; i < 16; i++)
+    {
+        messages[i] = temporary[i];
+    }
+}
+void SubstituteByteForEncryption(unsigned char *message)
 {
     for (int i = 0; i < 16; i++)
     {
         message[i] = SBox[message[i]];
     }
 }
-
-void mix_column(unsigned char *messages)
+void InverseSubsituteByte(unsigned char *messages)
+{
+    for (int i = 0; i < 16; i++)
+    {
+        messages[i] = InverseSBox[messages[i]];
+    }
+}
+void MixColumnForEncryption(unsigned char *messages)
 {
     unsigned char temp[16];
     for (int i = 0; i < 16; i++)
@@ -268,26 +395,66 @@ void mix_column(unsigned char *messages)
         messages[i] = temp[i];
     }
 }
-
-void encyption(unsigned char *text)
+void InverseMixColumnForDecryption(unsigned char *messages)
 {
-    add_round_key(text, 0);
+    unsigned char temporary[16];
+    for (int i = 0; i < 16; i++)
+    {
+        if (i % 4 == 0)
+        {
+            temporary[i] = multiplication_TableFor_14[messages[i]] ^ multiplication_TableFor_11[messages[i + 1]] ^ multiplication_TableFor_13[messages[i + 2]] ^ multiplication_TableFor_9[messages[i + 3]];
+        }
+        if (i % 4 == 1)
+        {
+            temporary[i] = multiplication_TableFor_14[messages[i]] ^ multiplication_TableFor_11[messages[i + 1]] ^ multiplication_TableFor_13[messages[i + 2]] ^ multiplication_TableFor_9[messages[i - 1]];
+        }
+        if (i % 4 == 2)
+        {
+            temporary[i] = multiplication_TableFor_14[messages[i]] ^ multiplication_TableFor_11[messages[i + 1]] ^ multiplication_TableFor_13[messages[i - 2]] ^ multiplication_TableFor_9[messages[i - 1]];
+        }
+        if (i % 4 == 3)
+        {
+            temporary[i] = multiplication_TableFor_14[messages[i]] ^ multiplication_TableFor_11[messages[i - 3]] ^ multiplication_TableFor_13[messages[i - 2]] ^ multiplication_TableFor_9[messages[i - 1]];
+        }
+    }
+    for (int i = 0; i < 16; i++)
+    {
+        messages[i] = temporary[i];
+    }
+}
+void AESEncryption(unsigned char *message)
+{
+    AddRoundKeyForEncryption(message, 0);
 
     for (int i = 1; i <= Num_of_Rounds; i++)
     {
-        byte_substitution(text);
-        shift_row(text);
+        SubstituteByteForEncryption(message);
+        ShiftRowForEncryption(message);
 
         if (i != Num_of_Rounds)
         {
-            mix_column(text);
+            MixColumnForEncryption(message);
         }
 
-        add_round_key(text, i);
+        AddRoundKeyForEncryption(message, i);
     }
 }
+void AESDecryption(unsigned char *ciphertext)
+{
+    AddRoundKeyForDecryption(ciphertext, 0);
+    for (int i = 1; i <= Num_of_Rounds; i++)
+    {
+        InverseShiftRowForDecryption(ciphertext);
+        InverseSubsituteByte(ciphertext);
+        AddRoundKeyForDecryption(ciphertext, i);
 
-void cipher_text(unsigned char *messages, int length)
+        if (i != Num_of_Rounds)
+        {
+            InverseMixColumnForDecryption(ciphertext);
+        }
+    }
+}
+void PrintingEncryptedMessage(unsigned char *messages, int length)
 {
     for (int i = 0; i < length - 1; i++)
     {
@@ -295,93 +462,7 @@ void cipher_text(unsigned char *messages, int length)
     }
 }
 
-void add_round_key_for_decryption(unsigned char *messages, int round)
-{
-    for (int i = 0; i < 16; i++)
-    {
-        messages[i] = messages[i] ^ ExtendedKey[160 - round * 16 + i];
-    }
-}
-
-void inverse_shift_rows(unsigned char *messages)
-{
-    unsigned char temporary[16];
-    temporary[0] = messages[0];
-    temporary[1] = messages[13];
-    temporary[2] = messages[10];
-    temporary[3] = messages[7];
-    temporary[4] = messages[4];
-    temporary[5] = messages[1];
-    temporary[6] = messages[14];
-    temporary[7] = messages[11];
-    temporary[8] = messages[8];
-    temporary[9] = messages[5];
-    temporary[10] = messages[2];
-    temporary[11] = messages[15];
-    temporary[12] = messages[12];
-    temporary[13] = messages[9];
-    temporary[14] = messages[6];
-    temporary[15] = messages[3];
-
-    for (int i = 0; i < 16; i++)
-    {
-        messages[i] = temporary[i];
-    }
-}
-
-void inverse_sub_bytes(unsigned char *messages)
-{
-    for (int i = 0; i < 16; i++)
-    {
-        messages[i] = InverseSBox[messages[i]];
-    }
-}
-
-void inverse_mix_column(unsigned char *messages)
-{
-    unsigned char temp[16];
-    for (int i = 0; i < 16; i++)
-    {
-        if (i % 4 == 0)
-        {
-            temp[i] = multiplication_TableFor_14[messages[i]] ^ multiplication_TableFor_11[messages[i + 1]] ^ multiplication_TableFor_13[messages[i + 2]] ^ multiplication_TableFor_9[messages[i + 3]];
-        }
-        if (i % 4 == 1)
-        {
-            temp[i] = multiplication_TableFor_14[messages[i]] ^ multiplication_TableFor_11[messages[i + 1]] ^ multiplication_TableFor_13[messages[i + 2]] ^ multiplication_TableFor_9[messages[i - 1]];
-        }
-        if (i % 4 == 2)
-        {
-            temp[i] = multiplication_TableFor_14[messages[i]] ^ multiplication_TableFor_11[messages[i + 1]] ^ multiplication_TableFor_13[messages[i - 2]] ^ multiplication_TableFor_9[messages[i - 1]];
-        }
-        if (i % 4 == 3)
-        {
-            temp[i] = multiplication_TableFor_14[messages[i]] ^ multiplication_TableFor_11[messages[i - 3]] ^ multiplication_TableFor_13[messages[i - 2]] ^ multiplication_TableFor_9[messages[i - 1]];
-        }
-    }
-    for (int i = 0; i < 16; i++)
-    {
-        messages[i] = temp[i];
-    }
-}
-
-void decryption(unsigned char *ciphertext)
-{
-    add_round_key_for_decryption(ciphertext, 0);
-    for (int i = 1; i <= Num_of_Rounds; i++)
-    {
-        inverse_shift_rows(ciphertext);
-        inverse_sub_bytes(ciphertext);
-        add_round_key_for_decryption(ciphertext, i);
-
-        if (i != Num_of_Rounds)
-        {
-            inverse_mix_column(ciphertext);
-        }
-    }
-}
-
-void decrypted_text_f(unsigned char *text, int length)
+void PrintingDecryptedMessage(unsigned char *text, int length)
 {
     for (int i = 0; i < length; i++)
     {
@@ -394,80 +475,69 @@ void decrypted_text_f(unsigned char *text, int length)
         }
     }
 }
-
-int main()
+void printText(const unsigned char *text, int length) 
 {
-    unsigned char textToEncrypt[] = "Hello There! My name is Sazid";
-    unsigned char key[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+    for (int i = 0; i < length; i++) {
+        printf("%c", text[i]);
+    }
+}
+void padText(unsigned char *text, int *textLength, int blockSize) 
+{
+    int extendedLength;
+    if (*textLength % blockSize != 0) {
+        extendedLength = *textLength + (blockSize - (*textLength % blockSize));
+    } else {
+        extendedLength = *textLength;
+    }
 
-    printf("\nText To Encrypt:");
-    for (int i = 0; i < sizeof(textToEncrypt); i++)
-    {
-        printf("%c", textToEncrypt[i]);
+    for (int i = *textLength; i < extendedLength; i++) {
+        text[i] = PaddingCharacter;
     }
-    key_expansion(key);
-    int text_length = sizeof(textToEncrypt) - 1;
-    int extended_length;
-    if (text_length % 16 != 0)
-    {
-        extended_length = text_length + (16 - (text_length % 16));
-    }
-    else
-    {
-        extended_length = text_length;
-    }
-    unsigned char encrypted_text[extended_length + 1];
-    for (int i = 0; i < extended_length; i++)
-    {
-        if (i < text_length)
-        {
-            encrypted_text[i] = textToEncrypt[i];
-        }
-        else
-        {
-            encrypted_text[i] = PaddingCharacter;
-        }
-        if (i + 1 == extended_length)
-        {
-            encrypted_text[i + 1] = '\0';
-        }
-    }
-    for (int i = 0; i < extended_length; i = i + 16)
-    {
-        unsigned char bag[16];
-        for (int k = 0; k < 16; k++)
-        {
-            bag[k] = encrypted_text[i + k];
-        }
-        encyption(bag);
 
-        for (int k = 0; k < 16; k++)
-        {
-            encrypted_text[i + k] = bag[k];
+    *textLength = extendedLength;
+}
+void encryptText(unsigned char *textToEncrypt, int textLength, const unsigned char *key)
+{
+    int blockSize = 16;
+    padText(textToEncrypt, &textLength, blockSize);
+
+    unsigned char encryptedText[textLength + 1];
+    for (int i = 0; i < textLength; i += blockSize) {
+        unsigned char block[blockSize];
+
+        for (int k = 0; k < blockSize; k++) {
+            block[k] = textToEncrypt[i + k];
+        }
+        for (int k = 0; k < blockSize; k++) {
+            encryptedText[i + k] = block[k];
         }
     }
-    printf("\nCipher Text:");
-    cipher_text(encrypted_text, sizeof(encrypted_text));
-    printf("\n");
-    unsigned char decrypted_text[extended_length + 1];
-    for (int i = 0; i < text_length; i = i + 16)
-    {
-        unsigned char temp[16];
-        for (int j = 0; j < 16; j++)
-        {
-            temp[j] = encrypted_text[i + j];
+
+    // printf("\nCipher Text:");
+    // printText(encryptedText, sizeof(encryptedText));
+    // printf("\n");
+}
+void decryptText(const unsigned char *encryptedText, int textLength) 
+{
+    int blockSize = 16;
+    unsigned char decryptedText[textLength + 1];
+
+    for (int i = 0; i < textLength; i += blockSize) {
+        unsigned char block[blockSize];
+
+        for (int j = 0; j < blockSize; j++) {
+            block[j] = encryptedText[i + j];
         }
-        decryption(temp);
-        for (int j = 0; j < 16; j++)
-        {
-            decrypted_text[i + j] = temp[j];
+        for (int j = 0; j < blockSize; j++) {
+            decryptedText[i + j] = block[j];
         }
-        if (i + 16 == extended_length)
-        {
-            decrypted_text[i + 16] = '\0';
+
+        if (i + blockSize == textLength) {
+            decryptedText[i + blockSize] = '\0';
         }
     }
-    printf("Decrypyed Text:");
-    decrypted_text_f(decrypted_text, sizeof(decrypted_text));
+
+    printf("Decrypted Text:");
+    printText(decryptedText, sizeof(decryptedText));
     printf("\n");
 }

@@ -173,16 +173,18 @@ void printText(const unsigned char *text, int length);
 void padText(unsigned char *text, int *textLength, int blockSize);
 void encryptText(unsigned char *textToEncrypt, int textLength, const unsigned char *key);
 void decryptText(const unsigned char *encryptedText, int textLength) ;
-int main()
+void PrintingEncryptedMessageToFile(unsigned char *messages, int length);
+void WritingDecryptedMessageToFile(unsigned char *text, int length);
+void EncryptionDriverFunction( unsigned char* textToEncrypt)
 {
-    unsigned char textToEncrypt[] = "Hello There! My name is Sazid";
+    //unsigned char textToEncrypt[] = "Hello There! My name is Sazid";
     unsigned char key[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
 
-    printf("\nText To Encrypt:");
-    for (int i = 0; i < sizeof(textToEncrypt); i++)
-    {
-        printf("%c", textToEncrypt[i]);
-    }
+   // printf("\nText To Encrypt:");
+    // for (int i = 0; i < sizeof(textToEncrypt); i++)
+    // {
+    //     printf("%c", textToEncrypt[i]);
+    // }
     KeyExpansionForEncryption(key);
     int LengthOfTheText= sizeof(textToEncrypt) - 1;
     int extended_length;
@@ -212,28 +214,42 @@ int main()
     }
     for (int i = 0; i < extended_length; i = i + 16)
     {
-        unsigned char bag[16];
+        unsigned char temporaryMessage[16];
         for (int k = 0; k < 16; k++)
         {
-            bag[k] = encrypted_text[i + k];
+            temporaryMessage[k] = encrypted_text[i + k];
         }
-        AESEncryption(bag);
+        AESEncryption(temporaryMessage);
 
         for (int k = 0; k < 16; k++)
         {
-            encrypted_text[i + k] = bag[k];
+            encrypted_text[i + k] = temporaryMessage[k];
         }
     }
-    printf("\nCipher Text:");
-    PrintingEncryptedMessage(encrypted_text, sizeof(encrypted_text));
-    printf("\n");
+    //printf("\nCipher Text:");
+    PrintingEncryptedMessageToFile(encrypted_text, sizeof(encrypted_text));
+    //printf("\n");
+    
+}
+void DecryptionDriverCode(unsigned char* EncryptedText)
+{
+    int LengthOfTheText= sizeof(EncryptedText) - 1;
+    int extended_length;
+    if (LengthOfTheText% 16 != 0)
+    {
+        extended_length = LengthOfTheText+ (16 - (LengthOfTheText% 16));
+    }
+    else
+    {
+        extended_length = LengthOfTheText;
+    }
     unsigned char decrypted_text[extended_length + 1];
     for (int i = 0; i < LengthOfTheText; i = i + 16)
     {
         unsigned char temp[16];
         for (int j = 0; j < 16; j++)
         {
-            temp[j] = encrypted_text[i + j];
+            temp[j] = EncryptedText[i + j];
         }
         AESDecryption(temp);
         for (int j = 0; j < 16; j++)
@@ -245,9 +261,9 @@ int main()
             decrypted_text[i + 16] = '\0';
         }
     }
-    printf("Decrypyed Text:");
-    PrintingDecryptedMessage(decrypted_text, sizeof(decrypted_text));
-    printf("\n");
+    //printf("Decrypyed Text:");
+    WritingDecryptedMessageToFile(decrypted_text, sizeof(decrypted_text));
+    //printf("\n");
 }
 void KeyExpansionForEncryption(unsigned char *Key)
 {
@@ -454,19 +470,36 @@ void AESDecryption(unsigned char *ciphertext)
         }
     }
 }
-void PrintingEncryptedMessage(unsigned char *messages, int length)
+void PrintingEncryptedMessageToFile(unsigned char *messages, int length)
 {
+    FILE *file = fopen("user.txt", "w");
+
+    if (file == NULL)
+    {
+        fprintf(stderr, "Error opening file for writing\n");
+        return;
+    }
+
     for (int i = 0; i < length - 1; i++)
     {
-        printf("%X ", messages[i]);
+        fprintf(file, "%X ", messages[i]);
     }
+    fclose(file);
 }
 
-void PrintingDecryptedMessage(unsigned char *text, int length)
+
+void WritingDecryptedMessageToFile(unsigned char *text, int length)
 {
+    FILE *file = fopen("User.txt", "w");
+    if (file == NULL)
+    {
+        fprintf(stderr, "Error opening file for writing\n");
+        return;
+    }
+
     for (int i = 0; i < length; i++)
     {
-        printf("%c", text[i]);
+        fprintf(file, "%c", text[i]);
 
         if (text[i + 1] == PaddingCharacter)
         {
@@ -474,6 +507,7 @@ void PrintingDecryptedMessage(unsigned char *text, int length)
             break;
         }
     }
+    fclose(file);
 }
 void printText(const unsigned char *text, int length) 
 {
@@ -496,48 +530,48 @@ void padText(unsigned char *text, int *textLength, int blockSize)
 
     *textLength = extendedLength;
 }
-void encryptText(unsigned char *textToEncrypt, int textLength, const unsigned char *key)
-{
-    int blockSize = 16;
-    padText(textToEncrypt, &textLength, blockSize);
+// void encryptText(unsigned char *textToEncrypt, int textLength, const unsigned char *key)
+// {
+//     int blockSize = 16;
+//     padText(textToEncrypt, &textLength, blockSize);
 
-    unsigned char encryptedText[textLength + 1];
-    for (int i = 0; i < textLength; i += blockSize) {
-        unsigned char block[blockSize];
+//     unsigned char encryptedText[textLength + 1];
+//     for (int i = 0; i < textLength; i += blockSize) {
+//         unsigned char block[blockSize];
 
-        for (int k = 0; k < blockSize; k++) {
-            block[k] = textToEncrypt[i + k];
-        }
-        for (int k = 0; k < blockSize; k++) {
-            encryptedText[i + k] = block[k];
-        }
-    }
+//         for (int k = 0; k < blockSize; k++) {
+//             block[k] = textToEncrypt[i + k];
+//         }
+//         for (int k = 0; k < blockSize; k++) {
+//             encryptedText[i + k] = block[k];
+//         }
+//     }
 
-    // printf("\nCipher Text:");
-    // printText(encryptedText, sizeof(encryptedText));
-    // printf("\n");
-}
-void decryptText(const unsigned char *encryptedText, int textLength) 
-{
-    int blockSize = 16;
-    unsigned char decryptedText[textLength + 1];
+//     // printf("\nCipher Text:");
+//     // printText(encryptedText, sizeof(encryptedText));
+//     // printf("\n");
+// }
+// void decryptText(const unsigned char *encryptedText, int textLength) 
+// {
+//     int blockSize = 16;
+//     unsigned char decryptedText[textLength + 1];
 
-    for (int i = 0; i < textLength; i += blockSize) {
-        unsigned char block[blockSize];
+//     for (int i = 0; i < textLength; i += blockSize) {
+//         unsigned char block[blockSize];
 
-        for (int j = 0; j < blockSize; j++) {
-            block[j] = encryptedText[i + j];
-        }
-        for (int j = 0; j < blockSize; j++) {
-            decryptedText[i + j] = block[j];
-        }
+//         for (int j = 0; j < blockSize; j++) {
+//             block[j] = encryptedText[i + j];
+//         }
+//         for (int j = 0; j < blockSize; j++) {
+//             decryptedText[i + j] = block[j];
+//         }
 
-        if (i + blockSize == textLength) {
-            decryptedText[i + blockSize] = '\0';
-        }
-    }
+//         if (i + blockSize == textLength) {
+//             decryptedText[i + blockSize] = '\0';
+//         }
+//     }
 
-    printf("Decrypted Text:");
-    printText(decryptedText, sizeof(decryptedText));
-    printf("\n");
-}
+//    // printf("Decrypted Text:");
+//    // printText(decryptedText, sizeof(decryptedText));
+//     //printf("\n");
+// }

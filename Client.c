@@ -8,8 +8,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <pthread.h>
-#include "AES.h"
 #define LENGTH 2048
+#define MAX_USERS 100
 #define MAX_STRING_LENGTH 100
 struct User
 {
@@ -187,59 +187,23 @@ int login_user()
 	}
 	return 1;
 }
+
 int main(int argc, char **argv)
 {
-	if (argc != 2)
-	{
-		printf("Usage: %s <port>\n", argv[0]);
-		return EXIT_FAILURE;
-	}
-		char *ip = "127.0.0.1";
-	int port = atoi(argv[1]);
-	signal(SIGINT, catch_ctrl_c_and_exit);
-	printf("Please enter your name: ");
-	fgets(name, 32, stdin);
-	str_trim_lf(name, strlen(name));
-
-	if (strlen(name) > 32 || strlen(name) < 2)
-	{
-		printf("Name must be less than 30 and more than 2 characters.\n");
-		return EXIT_FAILURE;
-	}
-		struct sockaddr_in server_addr;
-
-	/* Socket settings */
-	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = inet_addr(ip);
-	server_addr.sin_port = htons(port);
-
-	// Connect to Server
-	int err = connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
-	if (err == -1)
-	{
-		printf("ERROR: connect\n");
-		return EXIT_FAILURE;
-	}
-
-	// Send name
-	send(sockfd, name, 32, 0);
-
-	// printf("Please enter your name: ");
-	// fgets(name, 32, stdin);
-	// str_trim_lf(name, strlen(name));
-
 	int options;
 	int continueLoop = 0;
 	do
 	{
-
 		printf("Select an option:\n");
 		printf("1. Register\n");
 		printf("2. Login\n");
 		printf("3. Exit\n");
 
 		scanf("%d", &options);
+
+		// Clear input buffer
+		while ((getchar()) != '\n')
+			;
 
 		switch (options)
 		{
@@ -250,11 +214,23 @@ int main(int argc, char **argv)
 			}
 			break;
 		case 2:
+
 			if (login_user())
 			{
+				// Clear input buffer
+				// int c;
+				// while ((c = getchar()) != '\n' && c != EOF)
+				// 	;
+				// After successful login, get the user's name
+				printf("Please enter your name: \n");
+				fgets(name, 32, stdin);
+				str_trim_lf(name, strlen(name));
+				// Send name
+				send(sockfd, name, 32, 0);
 				continueLoop = 1;
 			}
 			break;
+
 		case 3:
 			printf("Exiting...\n");
 			break;
@@ -262,41 +238,42 @@ int main(int argc, char **argv)
 			printf("Invalid option. Please try again.\n");
 		}
 	} while (continueLoop == 0);
-	if (argc != 2)
-	{
+
+	if(argc != 2){
 		printf("Usage: %s <port>\n", argv[0]);
 		return EXIT_FAILURE;
 	}
-	// char *ip = "127.0.0.1";
-	// int port = atoi(argv[1]);
-	// signal(SIGINT, catch_ctrl_c_and_exit);
-	// printf("Please enter your name: ");
-	// fgets(name, 32, stdin);
-	// str_trim_lf(name, strlen(name));
 
-	// if (strlen(name) > 32 || strlen(name) < 2)
-	// {
-	// 	printf("Name must be less than 30 and more than 2 characters.\n");
-	// 	return EXIT_FAILURE;
-	// }
-	// struct sockaddr_in server_addr;
+	char *ip = "127.0.0.1";
+	int port = atoi(argv[1]);
 
-	// /* Socket settings */
-	// sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	// server_addr.sin_family = AF_INET;
-	// server_addr.sin_addr.s_addr = inet_addr(ip);
-	// server_addr.sin_port = htons(port);
+	signal(SIGINT, catch_ctrl_c_and_exit);
 
-	// // Connect to Server
-	// int err = connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
-	// if (err == -1)
-	// {
-	// 	printf("ERROR: connect\n");
-	// 	return EXIT_FAILURE;
-	// }
+	printf("Please enter your name: ");
+  fgets(name, 32, stdin);
+  str_trim_lf(name, strlen(name));
 
-	// // Send name
-	// send(sockfd, name, 32, 0);
+
+	if (strlen(name) > 32 || strlen(name) < 2){
+		printf("Name must be less than 30 and more than 2 characters.\n");
+		return EXIT_FAILURE;
+	}
+	struct sockaddr_in server_addr;
+	/* Socket settings */
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_addr.s_addr = inet_addr(ip);
+	server_addr.sin_port = htons(port);
+	// Connect to Server
+	int err = connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
+	if (err == -1)
+	{
+		printf("ERROR: connect\n");
+		return EXIT_FAILURE;
+	}
+
+	// Send name
+	send(sockfd, name, 32, 0);
 
 	printf("=== WELCOME TO THE CHATROOM ===\n");
 
