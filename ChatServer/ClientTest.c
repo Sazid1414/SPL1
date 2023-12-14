@@ -8,7 +8,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <pthread.h>
-
 #define LENGTH 2048
 #define MAX_STRING_LENGTH 100
 
@@ -34,8 +33,7 @@ void str_trim_lf(char *arr, int length)
 {
     int i;
     for (i = 0; i < length; i++)
-    {
-        // trim \n
+    { // trim \n
         if (arr[i] == '\n')
         {
             arr[i] = '\0';
@@ -73,7 +71,6 @@ void send_msg_handler()
         bzero(message, LENGTH);
         bzero(buffer, LENGTH + 32);
     }
-
     catch_ctrl_c_and_exit(2);
 }
 
@@ -94,11 +91,8 @@ void recv_msg_handler()
         }
         else
         {
-            // Handle the case when receive is -1 (error)
-            perror("Error receiving message");
-            break;
+            // -1
         }
-
         memset(message, 0, sizeof(message));
     }
 }
@@ -169,6 +163,7 @@ int register_user()
         printf("Registration successful!\n");
         return 1;
     }
+    return 1;
 }
 
 int login_user()
@@ -184,50 +179,82 @@ int login_user()
 
     if (authenticate_user("user.txt", email, password))
     {
-        printf("Login successful!\n");
+        printf("Login successful!");
+
+        // // Clear input buffer
+        // int c;
+        // while ((c = getchar()) != '\n' && c != EOF)
+        //     ;
+
+        // After successful login, get the user's name
+        printf("Please enter your name: \n");
+        fgets(name, 32, stdin);
+        str_trim_lf(name, strlen(name));
+
+        // Send name
+        send(sockfd, name, 32, 0);
+
         return 1;
     }
     else
     {
         printf("Login failed. Invalid email or password.\n");
+
+        // Clear input buffer
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF)
+            ;
+
         return 0;
     }
 }
 
 int main(int argc, char **argv)
 {
-    int options;
-    int continueLoop = 0;
-    do
-    {
-        printf("Select an option:\n");
-        printf("1. Register\n");
-        printf("2. Login\n");
-        printf("3. Exit\n");
+    // int options;
+    // int continueLoop = 0;
+    // do
+    // {
+    //     printf("Select an option:\n");
+    //     printf("1. Register\n");
+    //     printf("2. Login\n");
+    //     printf("3. Exit\n");
 
-        scanf("%d", &options);
+    //     scanf("%d", &options);
 
-        switch (options)
-        {
-        case 1:
-            if (register_user())
-            {
-                continueLoop = 1;
-            }
-            break;
-        case 2:
-            if (login_user())
-            {
-                continueLoop = 1;
-            }
-            break;
-        case 3:
-            printf("Exiting...\n");
-            break;
-        default:
-            printf("Invalid option. Please try again.\n");
-        }
-    } while (continueLoop == 0);
+    //     // Clear input buffer
+    //     while ((getchar()) != '\n')
+    //         ;
+
+    //     switch (options)
+    //     {
+    //     case 1:
+    //         if (register_user())
+    //         {
+    //             continueLoop = 1;
+    //         }
+    //         break;
+    //     case 2:
+    //         if (login_user())
+    //         {
+    //             // // After successful login, get the user's name
+    //             // printf("Please enter your name: \n");
+    //             // fgets(name, 32, stdin);
+    //             // str_trim_lf(name, strlen(name));
+
+    //             // // Send name
+    //             // send(sockfd, name, 32, 0);
+
+    //             continueLoop = 1;
+    //         }
+    //         break;
+    //     case 3:
+    //         printf("Exiting...\n");
+    //         break;
+    //     default:
+    //         printf("Invalid option. Please try again.\n");
+    //     }
+    // } while (continueLoop == 0);
 
     if (argc != 2)
     {
@@ -237,18 +264,7 @@ int main(int argc, char **argv)
 
     char *ip = "127.0.0.1";
     int port = atoi(argv[1]);
-
     signal(SIGINT, catch_ctrl_c_and_exit);
-
-    printf("Please enter your name: ");
-    fgets(name, 32, stdin);
-    str_trim_lf(name, strlen(name));
-
-    if (strlen(name) > 32 || strlen(name) < 2)
-    {
-        printf("Name must be less than 30 and more than 2 characters.\n");
-        return EXIT_FAILURE;
-    }
 
     struct sockaddr_in server_addr;
 
@@ -262,11 +278,17 @@ int main(int argc, char **argv)
     int err = connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
     if (err == -1)
     {
-        perror("ERROR: connect");
+        printf("ERROR: connect\n");
         return EXIT_FAILURE;
     }
-
-    // Send name
+    printf("Please enter your name: \n");
+    fgets(name, 32, stdin);
+    str_trim_lf(name, strlen(name));
+    if (strlen(name) > 32 || strlen(name) < 2)
+    {
+        printf("Name must be less than 30 and more than 2 characters.\n");
+        return EXIT_FAILURE;
+    }
     send(sockfd, name, 32, 0);
 
     printf("=== WELCOME TO THE CHATROOM ===\n");
@@ -274,14 +296,14 @@ int main(int argc, char **argv)
     pthread_t send_msg_thread;
     if (pthread_create(&send_msg_thread, NULL, (void *)send_msg_handler, NULL) != 0)
     {
-        perror("ERROR: pthread");
+        printf("ERROR: pthread\n");
         return EXIT_FAILURE;
     }
 
     pthread_t recv_msg_thread;
     if (pthread_create(&recv_msg_thread, NULL, (void *)recv_msg_handler, NULL) != 0)
     {
-        perror("ERROR: pthread");
+        printf("ERROR: pthread\n");
         return EXIT_FAILURE;
     }
 
