@@ -212,16 +212,16 @@ int main()
     }
     for (int i = 0; i < extended_length; i = i + 16)
     {
-        unsigned char bag[16];
+        unsigned char temporary[16];
         for (int k = 0; k < 16; k++)
         {
-            bag[k] = encrypted_text[i + k];
+            temporary[k] = encrypted_text[i + k];
         }
-        AESEncryption(bag);
+        AESEncryption(temporary);
 
         for (int k = 0; k < 16; k++)
         {
-            encrypted_text[i + k] = bag[k];
+            encrypted_text[i + k] = temporary[k];
         }
     }
     printf("\nCipher Text:");

@@ -53,13 +53,13 @@ void str_trim_lf(char *arr, int length)
 	}
 }
 
-void print_client_addr(struct sockaddr_in addr)
+void print_client_addr(struct sockaddr_in address)
 {
 	printf("%d.%d.%d.%d",
-		   addr.sin_addr.s_addr & 0xff,
-		   (addr.sin_addr.s_addr & 0xff00) >> 8,
-		   (addr.sin_addr.s_addr & 0xff0000) >> 16,
-		   (addr.sin_addr.s_addr & 0xff000000) >> 24);
+		   address.sin_addr.s_addr & 0xff,
+		   (address.sin_addr.s_addr & 0xff00) >> 8,
+		   (address.sin_addr.s_addr & 0xff0000) >> 16,
+		   (address.sin_addr.s_addr & 0xff000000) >> 24);
 }
 
 /* Add clients to queue */
@@ -112,7 +112,7 @@ void send_message(char *s, int uid)
 			{
 				if (write(clients[i]->sockfd, s, strlen(s)) < 0)
 				{
-					perror("ERROR: write to descriptor failed");
+					printf("ERROR: write to descriptor failed");
 					break;
 				}
 			}
@@ -198,7 +198,7 @@ void write_user_data(const char *filename, const struct User *new_user)
 
 	if (!file)
 	{
-		perror("Error opening user file");
+		printf("Error opening user file");
 		return;
 	}
 
@@ -213,7 +213,7 @@ int authenticate_user(const char *filename, const char *email, const char *passw
 
 	if (!file)
 	{
-		perror("Error opening user file");
+		printf("Error opening user file");
 		return 0; // Authentication failed
 	}
 
@@ -305,7 +305,7 @@ int main(int argc, char **argv)
 			{
 				continueLoop = 1;
 			}
-			
+
 			break;
 		case 2:
 			if (login_user())
@@ -326,50 +326,76 @@ int main(int argc, char **argv)
 		printf("Usage: %s <port>\n", argv[0]);
 		return EXIT_FAILURE;
 	}
-	if (argc != 2)
-	{
-		printf("Usage: %s <port>\n", argv[0]);
-		return EXIT_FAILURE;
-	}
+	// if (argc != 2)
+	// {
+	// 	printf("Usage: %s <port>\n", argv[0]);
+	// 	return EXIT_FAILURE;
+	// }
 
 	char *ip = "127.0.0.1";
 	int port = atoi(argv[1]);
 	int option = 1;
 	int listenfd = 0, connfd = 0;
+	/*struct sockaddr_in
+  {
+	__SOCKADDR_COMMON (sin_);
+	in_port_t sin_port;
+	struct in_addr sin_addr;
+
+
+	unsigned char sin_zero[sizeof (struct sockaddr)
+			   - __SOCKADDR_COMMON_SIZE
+			   - sizeof (in_port_t)
+			   - sizeof (struct in_addr)];
+  };*/
 	struct sockaddr_in serv_addr;
 	struct sockaddr_in cli_addr;
-	pthread_t tid;
+	pthread_t threadIdentifier;
 
 	/* Socket settings */
+	/* Create a new socket of type TYPE in domain DOMAIN, using
+   protocol PROTOCOL.  If PROTOCOL is zero, one is chosen automatically.
+   Returns a file descriptor for the new socket, or -1 for errors.  */
 	listenfd = socket(AF_INET, SOCK_STREAM, 0);
 	serv_addr.sin_family = AF_INET;
+	/* Convert Internet host address from numbers-and-dots notation in CP
+   into binary data in network byte order.  */
 	serv_addr.sin_addr.s_addr = inet_addr(ip);
+	// htons =HostToNetwork Converts the port number in netwok byte order
 	serv_addr.sin_port = htons(port);
 
 	/* Ignore pipe signals */
+	// Prevents the code from being crashed if client exists early
+	// SIG_IGN is a constant that indicates the signal should be ignored
 	signal(SIGPIPE, SIG_IGN);
+	/* Set socket FD's option OPTNAME at protocol level LEVEL
+   to *OPTVAL (which is OPTLEN bytes long).
+   Returns 0 on success, -1 for errors.  */
+/*#ifndef __USE_TIME_BITS64
+	extern int setsockopt(int __fd, int __level, int __optname,
+						  const void *__optval, socklen_t __optlen) __THROW; */
 
 	if (setsockopt(listenfd, SOL_SOCKET, (SO_REUSEADDR), (char *)&option, sizeof(option)) < 0)
 	{
-		perror("ERROR: setsockopt failed");
+		printf("setsockopt failed!");
 		return EXIT_FAILURE;
 	}
 
 	/* Bind */
 	if (bind(listenfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
 	{
-		perror("ERROR: Socket binding failed");
+		printf("Socket binding failed!");
 		return EXIT_FAILURE;
 	}
 
 	/* Listen */
 	if (listen(listenfd, 10) < 0)
 	{
-		perror("ERROR: Socket listening failed");
+		printf("Socket listening failed!");
 		return EXIT_FAILURE;
 	}
 
-	printf("=== WELCOME TO THE CHATROOM ===\n");
+	printf("***WELCOME TO THE CHATSERVER***\n");
 
 	while (1)
 	{
@@ -394,7 +420,7 @@ int main(int argc, char **argv)
 
 		/* Add client to the queue and fork thread */
 		queue_add(cli);
-		pthread_create(&tid, NULL, &handle_client, (void *)cli);
+		pthread_create(&threadIdentifier, NULL, &handle_client, (void *)cli);
 
 		/* Reduce CPU usage */
 		sleep(1);
